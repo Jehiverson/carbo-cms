@@ -1,10 +1,8 @@
 import type { FC } from 'react';
 import { Suspense, useRef, useState } from 'react';
-import { BsGithub } from 'react-icons/bs';
 import { HiMenuAlt1 } from 'react-icons/hi';
-import { SiStorybook } from 'react-icons/si';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import { DarkThemeToggle, Navbar, Sidebar, Spinner } from '../lib';
+import { Navbar, Sidebar, Spinner } from '../lib';
 import { routes } from './routes';
 
 export const Root: FC = () => {
@@ -21,27 +19,6 @@ export const Root: FC = () => {
             onClick={() => setCollapsed(!collapsed)}
           />
           <span className="text-xl font-semibold dark:text-white">CARBOCMS</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <a
-            className="cursor-pointer rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-            href={`${process.env.PUBLIC_URL}/storybook`}
-            title="Storybook"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <SiStorybook className="h-5 w-5" />
-          </a>
-          <a
-            className="cursor-pointer rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-            href="https://github.com/themesberg/flowbite-react"
-            title="Github Repository"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <BsGithub className="h-5 w-5" />
-          </a>
-          <DarkThemeToggle />
         </div>
       </Navbar>
       <div className="flex h-full overflow-hidden bg-white dark:bg-gray-900">
