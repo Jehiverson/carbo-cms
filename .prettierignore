@@ -1,0 +1,7 @@
+*.md
+.gitignore
+build/
+coverage/
+lib/
+docs/
+constants/
