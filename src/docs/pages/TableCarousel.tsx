@@ -88,7 +88,7 @@ const TableCarousel: FC = () => {
             'Success',
             'Your Register was add',
             'success'
-          )
+          );
 
       } else {
         //Validar cuando el archivo este vacios
@@ -133,7 +133,7 @@ const TableCarousel: FC = () => {
         'Success',
         'Your Register was update',
         'success'
-      )
+      );
   }
 
   const deleteDataCarousel =async(uid:string) => {
