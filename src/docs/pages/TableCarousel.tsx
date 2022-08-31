@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -15,6 +15,7 @@ interface DataCarouselProps {
   title: string;
   subtitle: string;
   imgName: string;
+  pageUsed: string;
 }[];
 
 const TableCarousel: FC = () => {
@@ -30,6 +31,7 @@ const TableCarousel: FC = () => {
   const [imgName, setImgName] = useState<string | undefined>("");
 
   const [imgFile, setImgFile] = useState<File | undefined>();
+  const [pageUsed, setPageUsed] = useState<string | undefined>("");
 
   const getDataCarousel = async () => {
     const getDataCarousel = await fetch('http://localhost:5000/carbografitos/us-central1/api/carousel')
@@ -53,6 +55,7 @@ const TableCarousel: FC = () => {
       setTitle(getDataIdCarousel.title);
       setSubTitle(getDataIdCarousel.subtitle);
       setImgName(getDataIdCarousel.imgName);
+      setPageUsed(getDataIdCarousel.pageUsed);
       setOpenModalUpdate(true);
     }
   };
@@ -66,7 +69,8 @@ const TableCarousel: FC = () => {
         let dataInsert = {
           "title": title,
           "imgName": urlImage,
-          "subtitle": subTitle
+          "subtitle": subTitle,
+          "pageUsed": pageUsed
         };
 
         await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel`,
@@ -110,7 +114,8 @@ const TableCarousel: FC = () => {
         "id": uid,
         "title": title,
         "imgName": urlImage,
-        "subtitle": subTitle
+        "subtitle": subTitle,
+        "pageUsed": pageUsed
       };
 
       console.log(dataUpdate)
@@ -158,6 +163,7 @@ const TableCarousel: FC = () => {
       setImgName("");
       setImgFile(undefined);
       setImgName("");
+      setPageUsed("");
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -198,6 +204,7 @@ const TableCarousel: FC = () => {
             <Table.HeadCell>Title</Table.HeadCell>
             <Table.HeadCell>Sub Title</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
+            <Table.HeadCell>Page Used</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -212,6 +219,7 @@ const TableCarousel: FC = () => {
                     <Table.Cell>
                       <img className="w-40 h-30" src={elementCarousel.imgName} alt="Logo" />
                     </Table.Cell>
+                    <Table.Cell>{elementCarousel.pageUsed}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
                         <Button onClick={() => getUpdateDataCarousel(elementCarousel.id)}><HiPencil /></Button>
@@ -239,7 +247,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="email1"
-                value="Your email"
+                value="Title"
               />
             </div>
             <TextInput
@@ -254,7 +262,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Your password"
+                value="Sub Title"
               />
             </div>
             <TextInput
@@ -266,11 +274,32 @@ const TableCarousel: FC = () => {
             />
           </div>
 
+          <div id="select">
+            <div className="mb-2 block">
+              <Label
+                htmlFor="page-img"
+                value="Select Page where you will use the image"
+              />
+            </div>
+            <Select
+              id="page-img"
+              required={true}
+              onChange={(e) => {setPageUsed(e.target.value)}}
+            >
+              <option>
+                Home
+              </option>
+              <option>
+                About Us
+              </option>
+            </Select>
+          </div>
+
           <div id="fileUpload">
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Upload file"
+                value="Image"
               />
             </div>
             <FileInput
@@ -279,6 +308,7 @@ const TableCarousel: FC = () => {
               onChange={handleImageChange}
             />
           </div>
+          
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => insertDataCarousel()}>save</Button>
@@ -293,7 +323,7 @@ const TableCarousel: FC = () => {
         <Modal.Body>
           <div>
           <TextInput
-              type="text"
+              type="hidden"
               value={uid}
               required={true}
               readOnly
@@ -326,6 +356,31 @@ const TableCarousel: FC = () => {
               required={true}
               onChange={(e) => setSubTitle(e.target.value)}
             />
+          </div>
+
+          <div id="select">
+            <div className="mb-2 block">
+              <Label
+                htmlFor="page-img"
+                value="Select Page where you will use the image"
+              />
+            </div>
+            <Select
+              id="page-img"
+              required={true}
+              value={pageUsed}
+              onChange={(e) => {setPageUsed(e.target.value)}}
+            >
+              <option>
+                Home
+              </option>
+              <option>
+                About Us
+              </option>
+              <option>
+                About Company
+              </option>
+            </Select>
           </div>
 
           <div id="fileUpload">
