@@ -6,6 +6,7 @@ import {
   HiPlus,
   HiTrash,
 } from 'react-icons/hi';
+import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
 
@@ -82,6 +83,13 @@ const TableCarousel: FC = () => {
           cleanData();
           getDataCarousel();
           setOpenModal(false);
+
+          Swal.fire(
+            'Success',
+            'Your Register was add',
+            'success'
+          );
+
       } else {
         //Validar cuando el archivo este vacios
       }
@@ -119,8 +127,13 @@ const TableCarousel: FC = () => {
       .then(data => { return data.data });
 
       cleanData();
-      setLoading(false);
+      setLoading(true);
       setOpenModalUpdate(false);
+      Swal.fire(
+        'Success',
+        'Your Register was update',
+        'success'
+      );
   }
 
   const deleteDataCarousel =async(uid:string) => {
@@ -135,7 +148,7 @@ const TableCarousel: FC = () => {
       .then(response => response.json())
       .then(data => { return data.data });
     
-      setLoading(false);
+      setLoading(true);
   }
 
   const cleanData = () => {
@@ -190,6 +203,7 @@ const TableCarousel: FC = () => {
           <Table.Body className="divide-y">
 
             {
+              dataCarousel.length > 0?
               dataCarousel.map((elementCarousel, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
@@ -201,12 +215,17 @@ const TableCarousel: FC = () => {
                     <Table.Cell>
                       <Button.Group>
                         <Button onClick={() => getUpdateDataCarousel(elementCarousel.id)}><HiPencil /></Button>
-                        <Button color="failure" onClick={() => setOpenModalUpdate(true)}><HiTrash /></Button>
+                        <Button color="failure" onClick={() => deleteDataCarousel(elementCarousel.id)}><HiTrash /></Button>
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
                 );
-              })
+              }):
+              (
+                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                  </Table.Row>
+              )
             }
 
           </Table.Body>
