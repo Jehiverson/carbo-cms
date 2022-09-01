@@ -15,10 +15,11 @@ interface DataCarouselProps {
   title: string;
   subtitle: string;
   imgName: string;
-  pageUsed: string;
+  mvp: boolean;
+  reverse: boolean;
 }[];
 
-const TableCarousel: FC = () => {
+const TableProducts: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
   const [dataCarousel, setDataCarousel] = useState<Array<DataCarouselProps>>([]);
@@ -31,13 +32,14 @@ const TableCarousel: FC = () => {
   const [imgName, setImgName] = useState<string | undefined>("");
 
   const [imgFile, setImgFile] = useState<File | undefined>();
-  const [pageUsed, setPageUsed] = useState<string | undefined>("");
+  const [mvp, setMvp] = useState<boolean | undefined | string>(false);
+  const [reverse, setReverse] = useState<boolean | undefined | string>(false);
 
   const getDataCarousel = async () => {
-    const getDataCarousel = await fetch('http://localhost:5000/carbografitos/us-central1/api/carousel')
+    const getDataCarousel = await fetch('http://localhost:5000/carbografitos/us-central1/api/products')
       .then(response => response.json())
       .then(data => { return data.data });
-
+    console.log(getDataCarousel)
     if (dataCarousel) {
       setLoading(false);
       setDataCarousel(getDataCarousel);
@@ -45,7 +47,7 @@ const TableCarousel: FC = () => {
   };
 
   const getUpdateDataCarousel = async (id: string) => {
-    const getDataIdCarousel = await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel/${id}`)
+    const getDataIdCarousel = await fetch(`http://localhost:5000/carbografitos/us-central1/api/products/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -55,7 +57,8 @@ const TableCarousel: FC = () => {
       setTitle(getDataIdCarousel.title);
       setSubTitle(getDataIdCarousel.subtitle);
       setImgName(getDataIdCarousel.imgName);
-      setPageUsed(getDataIdCarousel.pageUsed);
+      setMvp(getDataIdCarousel.mvp);
+      setReverse(getDataIdCarousel.reverse);
       setOpenModalUpdate(true);
     }
   };
@@ -70,10 +73,11 @@ const TableCarousel: FC = () => {
           "title": title,
           "imgName": urlImage,
           "subtitle": subTitle,
-          "pageUsed": pageUsed
+          "mvp": mvp,
+          "reverse": reverse
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel`,
+        await fetch(`http://localhost:5000/carbografitos/us-central1/api/products`,
           {
             method: 'POST',
             headers: {
@@ -115,12 +119,13 @@ const TableCarousel: FC = () => {
         "title": title,
         "imgName": urlImage,
         "subtitle": subTitle,
-        "pageUsed": pageUsed
+        "mvp": mvp,
+        "reverse": reverse
       };
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel`,
+      await fetch(`http://localhost:5000/carbografitos/us-central1/api/products`,
       {
         method: 'PATCH',
         headers: {
@@ -142,7 +147,7 @@ const TableCarousel: FC = () => {
   }
 
   const deleteDataCarousel =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel`,
+    await fetch(`http://localhost:5000/carbografitos/us-central1/api/products`,
       {
         method: 'DELETE',
         headers: {
@@ -163,7 +168,8 @@ const TableCarousel: FC = () => {
       setImgName("");
       setImgFile(undefined);
       setImgName("");
-      setPageUsed("");
+      setMvp(false);
+      setReverse(false);
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -180,7 +186,7 @@ const TableCarousel: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Carousel</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Products</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -204,7 +210,8 @@ const TableCarousel: FC = () => {
             <Table.HeadCell>Title</Table.HeadCell>
             <Table.HeadCell>Sub Title</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Page Used</Table.HeadCell>
+            <Table.HeadCell>MVP</Table.HeadCell>
+            <Table.HeadCell>Reverse</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -219,7 +226,8 @@ const TableCarousel: FC = () => {
                     <Table.Cell>
                       <img className="w-40 h-30" src={elementCarousel.imgName} alt="Logo" />
                     </Table.Cell>
-                    <Table.Cell>{elementCarousel.pageUsed}</Table.Cell>
+                    <Table.Cell>{elementCarousel.mvp?"True":"False"}</Table.Cell>
+                    <Table.Cell>{elementCarousel.reverse?"True":"False"}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
                         <Button onClick={() => getUpdateDataCarousel(elementCarousel.id)}><HiPencil /></Button>
@@ -241,7 +249,7 @@ const TableCarousel: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Carousel Image</Modal.Header>
+        <Modal.Header>Create Product</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
@@ -284,13 +292,34 @@ const TableCarousel: FC = () => {
             <Select
               id="page-img"
               required={true}
-              onChange={(e) => {setPageUsed(e.target.value)}}
+              onChange={(e) => {setMvp(Boolean(e.target.value))}}
             >
               <option>
-                Home
+                True
               </option>
               <option>
-                About Us
+                False
+              </option>
+            </Select>
+          </div>
+
+          <div id="select">
+            <div className="mb-2 block">
+              <Label
+                htmlFor="page-img"
+                value="Select Page where you will use the image"
+              />
+            </div>
+            <Select
+              id="page-img"
+              required={true}
+              onChange={(e) => {setReverse(Boolean(e.target.value))}}
+            >
+              <option>
+                True
+              </option>
+              <option>
+                False
               </option>
             </Select>
           </div>
@@ -319,7 +348,7 @@ const TableCarousel: FC = () => {
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Carousel Image</Modal.Header>
+        <Modal.Header>Update Product</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -368,17 +397,35 @@ const TableCarousel: FC = () => {
             <Select
               id="page-img"
               required={true}
-              value={pageUsed}
-              onChange={(e) => {setPageUsed(e.target.value)}}
+              value={mvp?.toString()}
+              onChange={(e) => {setMvp(Boolean(e.target.value))}}
             >
               <option>
-                Home
+                True
               </option>
               <option>
-                About Us
+                False
+              </option>
+            </Select>
+          </div>
+
+          <div id="select">
+            <div className="mb-2 block">
+              <Label
+                htmlFor="page-img"
+                value="Select Page where you will use the image"
+              />
+            </div>
+            <Select
+              id="page-img"
+              required={true}
+              onChange={(e) => {setReverse(Boolean(e.target.value))}}
+            >
+              <option>
+                True
               </option>
               <option>
-                About Company
+                False
               </option>
             </Select>
           </div>
@@ -409,4 +456,4 @@ const TableCarousel: FC = () => {
   );
 };
 
-export default TableCarousel;
+export default TableProducts;

@@ -56,6 +56,8 @@ import TooltipsPage from './pages/TooltipsPage'; */
 
 import DashboardPage from './pages/DashboardPage';
 import TableCarousel from './pages/TableCarousel';
+import TableProducts from './pages/TableProducts';
+import TableOurMission from './pages/TableOurMission';
 
 export type ComponentCardItem = {
   className: string;
@@ -316,6 +318,28 @@ export const routes: RouteProps[] = [
     icon: HiTable,
     href: '/tables',
     component: <TableCarousel />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  },
+  {
+    title: 'Products',
+    icon: HiTable,
+    href: '/products',
+    component: <TableProducts />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  },
+  {
+    title: 'Our Mission',
+    icon: HiTable,
+    href: '/ourmission',
+    component: <TableOurMission />,
     group: false,
     card: {
       className: 'w-36',
