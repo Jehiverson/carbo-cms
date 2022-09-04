@@ -1,79 +1,69 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, Select } from '../../lib';
 import {
   HiPencil,
   HiPlus,
   HiTrash,
 } from 'react-icons/hi';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
-import { updateImage } from "../functions/generalFunctions";
-
-interface DataOurMissionProps {
+interface DataOurServicesProps {
   id: string;
   title: string;
-  subtitle: string;
-  imgName: string;
-  type: boolean;
+  description: string;
+  type: string;
 }[];
 
-const TableOurMission: FC = () => {
+const TableOurServices: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
-  const [dataOurMission, setDataOurMission] = useState<Array<DataOurMissionProps>>([]);
+  const [dataOurServices, setDataOurServices] = useState<Array<DataOurServicesProps>>([]);
   const [openModal, setOpenModal] = useState<boolean | undefined>();
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean | undefined>();
 
   const [uid, setUid] = useState<string | undefined>("");
   const [title, setTitle] = useState<string | undefined>("");
-  const [subTitle, setSubTitle] = useState<string | undefined>("");
-  const [imgName, setImgName] = useState<string | undefined>("");
+  const [description, setDescription] = useState<string | undefined>("");
+  const [type, setType] = useState<undefined | string>("");
 
-  const [imgFile, setImgFile] = useState<File | undefined>();
-  const [type, setType] = useState<boolean | undefined | string>(false);
-
-  const getDataOurMission = async () => {
-    const getDataOurMission = await fetch('http://localhost:5000/carbografitos/us-central1/api/ourmission')
+  const getDataOurServices = async () => {
+    const getDataOurServices = await fetch('http://localhost:5000/carbografitos/us-central1/api/ourservices')
       .then(response => response.json())
       .then(data => { return data.data });
-    console.log(getDataOurMission)
-    if (dataOurMission) {
+    console.log(getDataOurServices)
+    if (dataOurServices) {
       setLoading(false);
-      setDataOurMission(getDataOurMission);
+      setDataOurServices(getDataOurServices);
     }
   };
 
-  const getUpdateDataOurMission = async (id: string) => {
-    const getDataIdOurMission = await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission/${id}`)
+  const getUpdateDataOurServices = async (id: string) => {
+    const getDataIdOurServices = await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
 
-    if (getDataIdOurMission) {
-      setUid(getDataIdOurMission.id);
-      setTitle(getDataIdOurMission.title);
-      setSubTitle(getDataIdOurMission.subtitle);
-      setImgName(getDataIdOurMission.imgName);
-      setType(getDataIdOurMission.type);
+    if (getDataIdOurServices) {
+      setUid(getDataIdOurServices.id);
+      setTitle(getDataIdOurServices.title);
+      setDescription(getDataIdOurServices.description);
+      setType(getDataIdOurServices.type);
       setOpenModalUpdate(true);
     }
   };
 
-  const insertDataOurMission = async () => {
+  const insertDataOurServices = async () => {
 
-    if (imgFile) {
-      var urlImage = await updateImage(imgFile);
-      if (urlImage) {
 
         let dataInsert = {
           "title": title,
-          "imgName": urlImage,
-          "subtitle": subTitle,
+          "description": description,
           "type": type,
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+
+        await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices`,
           {
             method: 'POST',
             headers: {
@@ -85,7 +75,7 @@ const TableOurMission: FC = () => {
           .then(data => { return data.data });
           
           cleanData();
-          getDataOurMission();
+          getDataOurServices();
           setOpenModal(false);
 
           Swal.fire(
@@ -93,34 +83,20 @@ const TableOurMission: FC = () => {
             'Your Register was add',
             'success'
           );
-
-      } else {
-        //Validar cuando el archivo este vacios
-      }
-
-    }
-
   };
 
-  const updateDataOurMission = async() =>{
-    let urlImage;
-    if(imgFile){
-      urlImage = await updateImage(imgFile); 
-    }else{
-      urlImage = imgName;
-    }
-    
+  const updateDataOurServices = async() =>{
+
       let dataUpdate = {
         "id": uid,
         "title": title,
-        "imgName": urlImage,
-        "subtitle": subTitle,
+        "description": description,
         "type": type
       };
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+      await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices`,
       {
         method: 'PATCH',
         headers: {
@@ -141,8 +117,8 @@ const TableOurMission: FC = () => {
       );
   }
 
-  const deleteDataOurMission =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+  const deleteDataOurServices =async(uid:string) => {
+    await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices`,
       {
         method: 'DELETE',
         headers: {
@@ -159,21 +135,12 @@ const TableOurMission: FC = () => {
   const cleanData = () => {
       setUid("");
       setTitle("");
-      setSubTitle("");
-      setImgName("");
-      setImgFile(undefined);
-      setImgName("");
-      setType(false);
-  };
-
-  const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
-    const fileList = e.target.files;
-    if (!fileList) return;
-    setImgFile(fileList[0]);
+      setDescription("");
+      setType("");
   };
 
   useEffect(() => {
-    getDataOurMission();
+    getDataOurServices();
   }, [loading]);
 
   return (
@@ -202,28 +169,25 @@ const TableOurMission: FC = () => {
         <Table>
           <Table.Head>
             <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Sub Title</Table.HeadCell>
-            <Table.HeadCell>Image</Table.HeadCell>
+            <Table.HeadCell>Description</Table.HeadCell>
             <Table.HeadCell>Type</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
             {
-              dataOurMission.length > 0?
-              dataOurMission.map((elementOurMission, idElement) => {
+              dataOurServices.length > 0?
+              dataOurServices.map((elementOurServices, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
-                    <Table.Cell>{elementOurMission.title}</Table.Cell>
-                    <Table.Cell>{elementOurMission.subtitle}</Table.Cell>
-                    <Table.Cell>
-                      <img className="w-40 h-30" src={elementOurMission.imgName} alt="Logo" />
-                    </Table.Cell>
-                    <Table.Cell>{elementOurMission.type?"True":"False"}</Table.Cell>
+                    <Table.Cell>{elementOurServices.title}</Table.Cell>
+                    <Table.Cell>{elementOurServices.description}</Table.Cell>
+                    
+                    <Table.Cell>{elementOurServices.type}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
-                        <Button onClick={() => getUpdateDataOurMission(elementOurMission.id)}><HiPencil /></Button>
-                        <Button color="failure" onClick={() => deleteDataOurMission(elementOurMission.id)}><HiTrash /></Button>
+                        <Button onClick={() => getUpdateDataOurServices(elementOurServices.id)}><HiPencil /></Button>
+                        <Button color="failure" onClick={() => deleteDataOurServices(elementOurServices.id)}><HiTrash /></Button>
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
@@ -241,7 +205,7 @@ const TableOurMission: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Product</Modal.Header>
+        <Modal.Header>Create Our Services</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
@@ -268,9 +232,9 @@ const TableOurMission: FC = () => {
             <TextInput
               id="password1"
               type="text"
-              value={subTitle}
+              value={description}
               required={true}
-              onChange={(e) => setSubTitle(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
@@ -284,34 +248,19 @@ const TableOurMission: FC = () => {
             <Select
               id="page-img"
               required={true}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
+              onChange={(e) => {setType(e.target.value)}}
             >
               <option>
-                True
+                Our Services
               </option>
               <option>
-                False
+                Our Specializations
               </option>
             </Select>
-          </div>
-          
-          <div id="fileUpload">
-            <div className="mb-2 block">
-              <Label
-                htmlFor="file"
-                value="Image"
-              />
-            </div>
-            <FileInput
-              id="file"
-              helperText="Imagen que se mostrara dentro de la plantilla"
-              onChange={handleImageChange}
-            />
-          </div>
-          
+          </div>  
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataOurMission()}>save</Button>
+          <Button onClick={() => insertDataOurServices()}>save</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Decline
           </Button>
@@ -319,7 +268,7 @@ const TableOurMission: FC = () => {
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Product</Modal.Header>
+        <Modal.Header>Update Our Services</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -352,9 +301,9 @@ const TableOurMission: FC = () => {
             <TextInput
               id="subtitle"
               type="text"
-              value={subTitle}
+              value={description}
               required={true}
-              onChange={(e) => setSubTitle(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
@@ -368,35 +317,20 @@ const TableOurMission: FC = () => {
             <Select
               id="page-img"
               required={true}
-              value={type?.toString()}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
+              value={type}
+              onChange={(e) => {setType(e.target.value)}}
             >
               <option>
-                True
+                Our Services
               </option>
               <option>
-                False
+                Our Specializations
               </option>
             </Select>
           </div>
-
-          <div id="fileUpload">
-            <div className="mb-2 block">
-              <Label
-                htmlFor="file"
-                value="Image"
-              />
-            </div>
-            <FileInput
-              id="file"
-              helperText="Imagen will see in the page"
-              onChange={handleImageChange}
-            />
-          </div>
-          <img className="w-80 h-30" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataOurMission()}>Update</Button>
+          <Button onClick={() => updateDataOurServices()}>Update</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
             Decline
           </Button>
@@ -406,4 +340,4 @@ const TableOurMission: FC = () => {
   );
 };
 
-export default TableOurMission;
+export default TableOurServices;

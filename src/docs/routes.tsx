@@ -57,7 +57,13 @@ import TooltipsPage from './pages/TooltipsPage'; */
 import DashboardPage from './pages/DashboardPage';
 import TableCarousel from './pages/TableCarousel';
 import TableProducts from './pages/TableProducts';
-import TableOurMission from './pages/TableOurMission';
+import TableOurMission from './pages/TableOurMission'
+import TableClientTestimonials from './pages/TableClientTestimonials';
+import TableOurServices from './pages/TableOurServices';
+import TableAboutCompany from './pages/TableAboutUs';
+import TablePaymethods from './pages/TablePaymethods';
+import TableFooter from './pages/TableFooter';
+import TableLocation from './pages/TableLocation';
 
 export type ComponentCardItem = {
   className: string;
@@ -346,6 +352,72 @@ export const routes: RouteProps[] = [
       images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
     },
   },
+  {
+    title: 'Client Testimonials',
+    icon: HiTable,
+    href: '/clientTestimonials',
+    component: <TableClientTestimonials />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  },
+  {
+    title: 'Our Services',
+    icon: HiTable,
+    href: '/OurServices',
+    component: <TableOurServices />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  },
+  {
+    title: 'About Us',
+    icon: HiTable,
+    href: '/aboutUs',
+    component: <TableAboutCompany />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  },
+  {
+    title: 'Pay Methods',
+    icon: HiTable,
+    href: '/paymethods',
+    component: <TablePaymethods />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  },
+  {
+    title: 'Footer',
+    icon: HiTable,
+    href: '/footer',
+    component: <TableFooter />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  },
+  {
+    title: 'Location',
+    icon: HiTable,
+    href: '/location',
+    component: <TableLocation />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'tables-light.svg', dark: 'tables-dark.svg' },
+    },
+  }
 /*   {
     title: 'Tabs',
     icon: MdTab,

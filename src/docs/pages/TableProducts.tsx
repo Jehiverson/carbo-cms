@@ -10,7 +10,7 @@ import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
 
-interface DataCarouselProps {
+interface DataProductsProps {
   id: string;
   title: string;
   subtitle: string;
@@ -22,7 +22,7 @@ interface DataCarouselProps {
 const TableProducts: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
-  const [dataCarousel, setDataCarousel] = useState<Array<DataCarouselProps>>([]);
+  const [dataProducts, setDataProducts] = useState<Array<DataProductsProps>>([]);
   const [openModal, setOpenModal] = useState<boolean | undefined>();
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean | undefined>();
 
@@ -35,35 +35,35 @@ const TableProducts: FC = () => {
   const [mvp, setMvp] = useState<boolean | undefined | string>(false);
   const [reverse, setReverse] = useState<boolean | undefined | string>(false);
 
-  const getDataCarousel = async () => {
-    const getDataCarousel = await fetch('http://localhost:5000/carbografitos/us-central1/api/products')
+  const getData = async () => {
+    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/products')
       .then(response => response.json())
       .then(data => { return data.data });
-    console.log(getDataCarousel)
-    if (dataCarousel) {
+    console.log(getData)
+    if (dataProducts) {
       setLoading(false);
-      setDataCarousel(getDataCarousel);
+      setDataProducts(getData);
     }
   };
 
-  const getUpdateDataCarousel = async (id: string) => {
-    const getDataIdCarousel = await fetch(`http://localhost:5000/carbografitos/us-central1/api/products/${id}`)
+  const getUpdateData = async (id: string) => {
+    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/products/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
 
-    if (getDataIdCarousel) {
-      setUid(getDataIdCarousel.id);
-      setTitle(getDataIdCarousel.title);
-      setSubTitle(getDataIdCarousel.subtitle);
-      setImgName(getDataIdCarousel.imgName);
-      setMvp(getDataIdCarousel.mvp);
-      setReverse(getDataIdCarousel.reverse);
+    if (getDataId) {
+      setUid(getDataId.id);
+      setTitle(getDataId.title);
+      setSubTitle(getDataId.subtitle);
+      setImgName(getDataId.imgName);
+      setMvp(getDataId.mvp);
+      setReverse(getDataId.reverse);
       setOpenModalUpdate(true);
     }
   };
 
-  const insertDataCarousel = async () => {
+  const insertData = async () => {
 
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
@@ -89,7 +89,7 @@ const TableProducts: FC = () => {
           .then(data => { return data.data });
           
           cleanData();
-          getDataCarousel();
+          getData();
           setOpenModal(false);
 
           Swal.fire(
@@ -106,7 +106,7 @@ const TableProducts: FC = () => {
 
   };
 
-  const updateDataCarousel = async() =>{
+  const updateData = async() =>{
     let urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
@@ -146,7 +146,7 @@ const TableProducts: FC = () => {
       );
   }
 
-  const deleteDataCarousel =async(uid:string) => {
+  const deleteData =async(uid:string) => {
     await fetch(`http://localhost:5000/carbografitos/us-central1/api/products`,
       {
         method: 'DELETE',
@@ -179,7 +179,7 @@ const TableProducts: FC = () => {
   };
 
   useEffect(() => {
-    getDataCarousel();
+    getData();
   }, [loading]);
 
   return (
@@ -217,21 +217,21 @@ const TableProducts: FC = () => {
           <Table.Body className="divide-y">
 
             {
-              dataCarousel.length > 0?
-              dataCarousel.map((elementCarousel, idElement) => {
+              dataProducts.length > 0?
+              dataProducts.map((elementProducts, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
-                    <Table.Cell>{elementCarousel.title}</Table.Cell>
-                    <Table.Cell>{elementCarousel.subtitle}</Table.Cell>
+                    <Table.Cell>{elementProducts.title}</Table.Cell>
+                    <Table.Cell>{elementProducts.subtitle}</Table.Cell>
                     <Table.Cell>
-                      <img className="w-40 h-30" src={elementCarousel.imgName} alt="Logo" />
+                      <img className="w-40 h-30" src={elementProducts.imgName} alt="Logo" />
                     </Table.Cell>
-                    <Table.Cell>{elementCarousel.mvp?"True":"False"}</Table.Cell>
-                    <Table.Cell>{elementCarousel.reverse?"True":"False"}</Table.Cell>
+                    <Table.Cell>{elementProducts.mvp?"True":"False"}</Table.Cell>
+                    <Table.Cell>{elementProducts.reverse?"True":"False"}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
-                        <Button onClick={() => getUpdateDataCarousel(elementCarousel.id)}><HiPencil /></Button>
-                        <Button color="failure" onClick={() => deleteDataCarousel(elementCarousel.id)}><HiTrash /></Button>
+                        <Button onClick={() => getUpdateData(elementProducts.id)}><HiPencil /></Button>
+                        <Button color="failure" onClick={() => deleteData(elementProducts.id)}><HiTrash /></Button>
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
@@ -340,7 +340,7 @@ const TableProducts: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataCarousel()}>save</Button>
+          <Button onClick={() => insertData()}>save</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Decline
           </Button>
@@ -401,10 +401,10 @@ const TableProducts: FC = () => {
               onChange={(e) => {setMvp(Boolean(e.target.value))}}
             >
               <option>
-                True
+                true
               </option>
               <option>
-                False
+                false
               </option>
             </Select>
           </div>
@@ -419,13 +419,14 @@ const TableProducts: FC = () => {
             <Select
               id="page-img"
               required={true}
+              value={reverse?.toString()}
               onChange={(e) => {setReverse(Boolean(e.target.value))}}
             >
               <option>
-                True
+                true
               </option>
               <option>
-                False
+                false
               </option>
             </Select>
           </div>
@@ -446,7 +447,7 @@ const TableProducts: FC = () => {
           <img className="w-80 h-30" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataCarousel()}>Update</Button>
+          <Button onClick={() => updateData()}>Update</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
             Decline
           </Button>

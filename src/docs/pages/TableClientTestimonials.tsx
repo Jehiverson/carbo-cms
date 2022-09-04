@@ -6,74 +6,79 @@ import {
   HiPlus,
   HiTrash,
 } from 'react-icons/hi';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 import { updateImage } from "../functions/generalFunctions";
 
-interface DataOurMissionProps {
+interface DataClientTestimonialsProps {
   id: string;
-  title: string;
-  subtitle: string;
+  name: string;
+  company: string;
+  description: string;
   imgName: string;
-  type: boolean;
+  page: boolean;
 }[];
 
-const TableOurMission: FC = () => {
+const TableClientTestimonials: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
-  const [dataOurMission, setDataOurMission] = useState<Array<DataOurMissionProps>>([]);
+  const [dataClientTestimonials, setDataClientTestimonials] = useState<Array<DataClientTestimonialsProps>>([]);
   const [openModal, setOpenModal] = useState<boolean | undefined>();
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean | undefined>();
 
   const [uid, setUid] = useState<string | undefined>("");
-  const [title, setTitle] = useState<string | undefined>("");
-  const [subTitle, setSubTitle] = useState<string | undefined>("");
+  const [name, setName] = useState<string | undefined>("");
+  const [company, setCompany] = useState<string | undefined>("");
+  const [description, setDescription] = useState<string | undefined>("");
+  const [page, setPage] = useState<string | undefined | boolean>(false);
+
   const [imgName, setImgName] = useState<string | undefined>("");
-
   const [imgFile, setImgFile] = useState<File | undefined>();
-  const [type, setType] = useState<boolean | undefined | string>(false);
+  
 
-  const getDataOurMission = async () => {
-    const getDataOurMission = await fetch('http://localhost:5000/carbografitos/us-central1/api/ourmission')
+  const getDataClientTestimonials = async () => {
+    const getDataClientTestimonials = await fetch('http://localhost:5000/carbografitos/us-central1/api/clientTestimonials')
       .then(response => response.json())
       .then(data => { return data.data });
-    console.log(getDataOurMission)
-    if (dataOurMission) {
+    
+    if (dataClientTestimonials) {
       setLoading(false);
-      setDataOurMission(getDataOurMission);
+      setDataClientTestimonials(getDataClientTestimonials);
     }
   };
 
-  const getUpdateDataOurMission = async (id: string) => {
-    const getDataIdOurMission = await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission/${id}`)
+  const getUpdateDataClientTestimonials = async (id: string) => {
+    const getDataIdClientTestimonials = await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
 
-    if (getDataIdOurMission) {
-      setUid(getDataIdOurMission.id);
-      setTitle(getDataIdOurMission.title);
-      setSubTitle(getDataIdOurMission.subtitle);
-      setImgName(getDataIdOurMission.imgName);
-      setType(getDataIdOurMission.type);
+    if (getDataIdClientTestimonials) {
+      setUid(getDataIdClientTestimonials.id);
+      setName(getDataIdClientTestimonials.name);
+      setCompany(getDataIdClientTestimonials.company);
+      setDescription(getDataIdClientTestimonials.description);
+      setImgName(getDataIdClientTestimonials.imgName);
+      setPage(getDataIdClientTestimonials.page);
       setOpenModalUpdate(true);
     }
   };
 
-  const insertDataOurMission = async () => {
+  const insertDataClientTestimonials = async () => {
 
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
       if (urlImage) {
 
         let dataInsert = {
-          "title": title,
+          "name": name,
+          "company": company,
+          "description": description,
+          "page": page,
           "imgName": urlImage,
-          "subtitle": subTitle,
-          "type": type,
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+        await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials`,
           {
             method: 'POST',
             headers: {
@@ -85,7 +90,7 @@ const TableOurMission: FC = () => {
           .then(data => { return data.data });
           
           cleanData();
-          getDataOurMission();
+          getDataClientTestimonials();
           setOpenModal(false);
 
           Swal.fire(
@@ -102,8 +107,8 @@ const TableOurMission: FC = () => {
 
   };
 
-  const updateDataOurMission = async() =>{
-    let urlImage;
+  const updateDataClientTestimonials = async() =>{
+    var urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
     }else{
@@ -111,16 +116,17 @@ const TableOurMission: FC = () => {
     }
     
       let dataUpdate = {
-        "id": uid,
-        "title": title,
-        "imgName": urlImage,
-        "subtitle": subTitle,
-        "type": type
+          "id":uid,
+          "name": name,
+          "company": company,
+          "description": description,
+          "page": page,
+          "imgName": urlImage,
       };
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+      await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials`,
       {
         method: 'PATCH',
         headers: {
@@ -141,8 +147,8 @@ const TableOurMission: FC = () => {
       );
   }
 
-  const deleteDataOurMission =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+  const deleteDataClientTestimonials =async(uid:string) => {
+    await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials`,
       {
         method: 'DELETE',
         headers: {
@@ -158,12 +164,12 @@ const TableOurMission: FC = () => {
 
   const cleanData = () => {
       setUid("");
-      setTitle("");
-      setSubTitle("");
+      setName("");
+      setCompany("");
+      setDescription("");
+      setPage("");
       setImgName("");
       setImgFile(undefined);
-      setImgName("");
-      setType(false);
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -173,14 +179,14 @@ const TableOurMission: FC = () => {
   };
 
   useEffect(() => {
-    getDataOurMission();
+    getDataClientTestimonials();
   }, [loading]);
 
   return (
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Our Mission</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Client Testimonials</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -201,29 +207,31 @@ const TableOurMission: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Sub Title</Table.HeadCell>
-            <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Type</Table.HeadCell>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Company</Table.HeadCell>
+            <Table.HeadCell>Description</Table.HeadCell>
+            <Table.HeadCell>IMG</Table.HeadCell>
+            <Table.HeadCell>Page</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
             {
-              dataOurMission.length > 0?
-              dataOurMission.map((elementOurMission, idElement) => {
+              dataClientTestimonials.length > 0?
+              dataClientTestimonials.map((elementClientTestimonials, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
-                    <Table.Cell>{elementOurMission.title}</Table.Cell>
-                    <Table.Cell>{elementOurMission.subtitle}</Table.Cell>
+                    <Table.Cell>{elementClientTestimonials.name}</Table.Cell>
+                    <Table.Cell>{elementClientTestimonials.company}</Table.Cell>
+                    <Table.Cell>{elementClientTestimonials.description}</Table.Cell>
                     <Table.Cell>
-                      <img className="w-40 h-30" src={elementOurMission.imgName} alt="Logo" />
+                      <img className="w-40 h-30" src={elementClientTestimonials.imgName} alt="Logo" />
                     </Table.Cell>
-                    <Table.Cell>{elementOurMission.type?"True":"False"}</Table.Cell>
+                    <Table.Cell>{elementClientTestimonials.page}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
-                        <Button onClick={() => getUpdateDataOurMission(elementOurMission.id)}><HiPencil /></Button>
-                        <Button color="failure" onClick={() => deleteDataOurMission(elementOurMission.id)}><HiTrash /></Button>
+                        <Button onClick={() => getUpdateDataClientTestimonials(elementClientTestimonials.id)}><HiPencil /></Button>
+                        <Button color="failure" onClick={() => deleteDataClientTestimonials(elementClientTestimonials.id)}><HiTrash /></Button>
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
@@ -241,36 +249,52 @@ const TableOurMission: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Product</Modal.Header>
+        <Modal.Header>Create Client Testimonials</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="email1"
-                value="Title"
+                value="Name"
               />
             </div>
             <TextInput
               id="email1"
               type="text"
-              value={title}
+              value={name}
               required={true}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Sub Title"
+                value="Company"
               />
             </div>
             <TextInput
               id="password1"
               type="text"
-              value={subTitle}
+              value={company}
               required={true}
-              onChange={(e) => setSubTitle(e.target.value)}
+              onChange={(e) => setCompany(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="password1"
+                value="description"
+              />
+            </div>
+            <TextInput
+              id="description"
+              type="text"
+              value={description}
+              required={true}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
@@ -284,13 +308,13 @@ const TableOurMission: FC = () => {
             <Select
               id="page-img"
               required={true}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
+              onChange={(e) => {setPage(e.target.value)}}
             >
               <option>
-                True
+                Client Testimonials
               </option>
               <option>
-                False
+                Our Team
               </option>
             </Select>
           </div>
@@ -311,7 +335,7 @@ const TableOurMission: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataOurMission()}>save</Button>
+          <Button onClick={() => insertDataClientTestimonials()}>save</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Decline
           </Button>
@@ -319,7 +343,7 @@ const TableOurMission: FC = () => {
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Product</Modal.Header>
+        <Modal.Header>Update Client Testimonials</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -331,30 +355,46 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Name"
               />
             </div>
             <TextInput
               id="title"
               type="text"
-              value={title}
+              value={name}
               required={true}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Subtitle"
+                value="Company"
               />
             </div>
             <TextInput
               id="subtitle"
               type="text"
-              value={subTitle}
+              value={company}
               required={true}
-              onChange={(e) => setSubTitle(e.target.value)}
+              onChange={(e) => setCompany(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="password1"
+                value="description"
+              />
+            </div>
+            <TextInput
+              id="description"
+              type="text"
+              value={description}
+              required={true}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
@@ -368,14 +408,14 @@ const TableOurMission: FC = () => {
             <Select
               id="page-img"
               required={true}
-              value={type?.toString()}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
+              value={page?.toString()}
+              onChange={(e) => {setPage(e.target.value)}}
             >
               <option>
-                True
+                Client Testimonials
               </option>
               <option>
-                False
+                Our Team
               </option>
             </Select>
           </div>
@@ -396,7 +436,7 @@ const TableOurMission: FC = () => {
           <img className="w-80 h-30" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataOurMission()}>Update</Button>
+          <Button onClick={() => updateDataClientTestimonials()}>Update</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
             Decline
           </Button>
@@ -406,4 +446,4 @@ const TableOurMission: FC = () => {
   );
 };
 
-export default TableOurMission;
+export default TableClientTestimonials;

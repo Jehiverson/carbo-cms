@@ -54,6 +54,7 @@
     "classnames": "^2.3.1",
     "commitizen": "^4.2.4",
     "firebase": "^9.9.0",
+    "moment": "^2.29.4",
     "react-icons": "^4.3.1",
     "react-indiana-drag-scroll": "^2.1.0",
     "sweetalert2": "^11.4.29"

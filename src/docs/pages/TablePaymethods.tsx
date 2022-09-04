@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -10,57 +10,53 @@ import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
 
-interface DataOurMissionProps {
+interface DataTablePaymethodsProps {
   id: string;
   title: string;
-  subtitle: string;
+  description: string;
   imgName: string;
-  type: boolean;
 }[];
 
-const TableOurMission: FC = () => {
+const TableTablePaymethods: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
-  const [dataOurMission, setDataOurMission] = useState<Array<DataOurMissionProps>>([]);
+  const [dataTablePaymethods, setDataTablePaymethods] = useState<Array<DataTablePaymethodsProps>>([]);
   const [openModal, setOpenModal] = useState<boolean | undefined>();
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean | undefined>();
 
   const [uid, setUid] = useState<string | undefined>("");
   const [title, setTitle] = useState<string | undefined>("");
-  const [subTitle, setSubTitle] = useState<string | undefined>("");
+  const [description, setDescription] = useState<string | undefined>("");
   const [imgName, setImgName] = useState<string | undefined>("");
-
   const [imgFile, setImgFile] = useState<File | undefined>();
-  const [type, setType] = useState<boolean | undefined | string>(false);
-
-  const getDataOurMission = async () => {
-    const getDataOurMission = await fetch('http://localhost:5000/carbografitos/us-central1/api/ourmission')
+  
+  const getData = async () => {
+    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/paymethods')
       .then(response => response.json())
       .then(data => { return data.data });
-    console.log(getDataOurMission)
-    if (dataOurMission) {
+    console.log(getData)
+    if (dataTablePaymethods) {
       setLoading(false);
-      setDataOurMission(getDataOurMission);
+      setDataTablePaymethods(getData);
     }
   };
 
-  const getUpdateDataOurMission = async (id: string) => {
-    const getDataIdOurMission = await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission/${id}`)
+  const getUpdateData = async (id: string) => {
+    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
 
-    if (getDataIdOurMission) {
-      setUid(getDataIdOurMission.id);
-      setTitle(getDataIdOurMission.title);
-      setSubTitle(getDataIdOurMission.subtitle);
-      setImgName(getDataIdOurMission.imgName);
-      setType(getDataIdOurMission.type);
+    if (getDataId) {
+      setUid(getDataId.id);
+      setTitle(getDataId.title);
+      setDescription(getDataId.description);
+      setImgName(getDataId.imgName);
       setOpenModalUpdate(true);
     }
   };
 
-  const insertDataOurMission = async () => {
+  const insertData = async () => {
 
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
@@ -69,11 +65,10 @@ const TableOurMission: FC = () => {
         let dataInsert = {
           "title": title,
           "imgName": urlImage,
-          "subtitle": subTitle,
-          "type": type,
+          "description": description
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+        await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods`,
           {
             method: 'POST',
             headers: {
@@ -85,7 +80,7 @@ const TableOurMission: FC = () => {
           .then(data => { return data.data });
           
           cleanData();
-          getDataOurMission();
+          getData();
           setOpenModal(false);
 
           Swal.fire(
@@ -102,7 +97,7 @@ const TableOurMission: FC = () => {
 
   };
 
-  const updateDataOurMission = async() =>{
+  const updateData = async() =>{
     let urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
@@ -114,13 +109,12 @@ const TableOurMission: FC = () => {
         "id": uid,
         "title": title,
         "imgName": urlImage,
-        "subtitle": subTitle,
-        "type": type
+        "description": description
       };
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+      await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods`,
       {
         method: 'PATCH',
         headers: {
@@ -141,8 +135,8 @@ const TableOurMission: FC = () => {
       );
   }
 
-  const deleteDataOurMission =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+  const deleteData =async(uid:string) => {
+    await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods`,
       {
         method: 'DELETE',
         headers: {
@@ -159,11 +153,10 @@ const TableOurMission: FC = () => {
   const cleanData = () => {
       setUid("");
       setTitle("");
-      setSubTitle("");
+      setDescription("");
       setImgName("");
       setImgFile(undefined);
       setImgName("");
-      setType(false);
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
@@ -173,14 +166,14 @@ const TableOurMission: FC = () => {
   };
 
   useEffect(() => {
-    getDataOurMission();
+    getData();
   }, [loading]);
 
   return (
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Our Mission</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Pay Methods</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -202,28 +195,26 @@ const TableOurMission: FC = () => {
         <Table>
           <Table.Head>
             <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Sub Title</Table.HeadCell>
+            <Table.HeadCell>Description</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Type</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
             {
-              dataOurMission.length > 0?
-              dataOurMission.map((elementOurMission, idElement) => {
+              dataTablePaymethods.length > 0?
+              dataTablePaymethods.map((elementTablePaymethods, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
-                    <Table.Cell>{elementOurMission.title}</Table.Cell>
-                    <Table.Cell>{elementOurMission.subtitle}</Table.Cell>
+                    <Table.Cell>{elementTablePaymethods.title}</Table.Cell>
+                    <Table.Cell>{elementTablePaymethods.description}</Table.Cell>
                     <Table.Cell>
-                      <img className="w-40 h-30" src={elementOurMission.imgName} alt="Logo" />
+                      <img className="w-40 h-30" src={elementTablePaymethods.imgName} alt="Logo" />
                     </Table.Cell>
-                    <Table.Cell>{elementOurMission.type?"True":"False"}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
-                        <Button onClick={() => getUpdateDataOurMission(elementOurMission.id)}><HiPencil /></Button>
-                        <Button color="failure" onClick={() => deleteDataOurMission(elementOurMission.id)}><HiTrash /></Button>
+                        <Button onClick={() => getUpdateData(elementTablePaymethods.id)}><HiPencil /></Button>
+                        <Button color="failure" onClick={() => deleteData(elementTablePaymethods.id)}><HiTrash /></Button>
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
@@ -268,31 +259,10 @@ const TableOurMission: FC = () => {
             <TextInput
               id="password1"
               type="text"
-              value={subTitle}
+              value={description}
               required={true}
-              onChange={(e) => setSubTitle(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
             />
-          </div>
-
-          <div id="select">
-            <div className="mb-2 block">
-              <Label
-                htmlFor="page-img"
-                value="Select Page where you will use the image"
-              />
-            </div>
-            <Select
-              id="page-img"
-              required={true}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
-            >
-              <option>
-                True
-              </option>
-              <option>
-                False
-              </option>
-            </Select>
           </div>
           
           <div id="fileUpload">
@@ -311,7 +281,7 @@ const TableOurMission: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataOurMission()}>save</Button>
+          <Button onClick={() => insertData()}>save</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Decline
           </Button>
@@ -352,32 +322,10 @@ const TableOurMission: FC = () => {
             <TextInput
               id="subtitle"
               type="text"
-              value={subTitle}
+              value={description}
               required={true}
-              onChange={(e) => setSubTitle(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
             />
-          </div>
-
-          <div id="select">
-            <div className="mb-2 block">
-              <Label
-                htmlFor="page-img"
-                value="Select Page where you will use the image"
-              />
-            </div>
-            <Select
-              id="page-img"
-              required={true}
-              value={type?.toString()}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
-            >
-              <option>
-                True
-              </option>
-              <option>
-                False
-              </option>
-            </Select>
           </div>
 
           <div id="fileUpload">
@@ -396,7 +344,7 @@ const TableOurMission: FC = () => {
           <img className="w-80 h-30" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataOurMission()}>Update</Button>
+          <Button onClick={() => updateData()}>Update</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
             Decline
           </Button>
@@ -406,4 +354,4 @@ const TableOurMission: FC = () => {
   );
 };
 
-export default TableOurMission;
+export default TableTablePaymethods;
