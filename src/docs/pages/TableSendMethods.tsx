@@ -10,17 +10,17 @@ import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
 
-interface DataTablePaymethodsProps {
+interface DataSendMethodsProps {
   id: string;
   title: string;
   description: string;
   imgName: string;
 }[];
 
-const TableTablePaymethods: FC = () => {
+const TableSendMethods: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
-  const [dataTablePaymethods, setDataTablePaymethods] = useState<Array<DataTablePaymethodsProps>>([]);
+  const [dataSendMethods, setDataSendMethods] = useState<Array<DataSendMethodsProps>>([]);
   const [openModal, setOpenModal] = useState<boolean | undefined>();
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean | undefined>();
 
@@ -31,18 +31,18 @@ const TableTablePaymethods: FC = () => {
   const [imgFile, setImgFile] = useState<File | undefined>();
   
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/paymethods')
+    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/sendmethods')
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
-    if (dataTablePaymethods) {
+    if (dataSendMethods) {
       setLoading(false);
-      setDataTablePaymethods(getData);
+      setDataSendMethods(getData);
     }
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods/${id}`)
+    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -68,7 +68,7 @@ const TableTablePaymethods: FC = () => {
           "description": description
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods`,
+        await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods`,
           {
             method: 'POST',
             headers: {
@@ -114,7 +114,7 @@ const TableTablePaymethods: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods`,
+      await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods`,
       {
         method: 'PATCH',
         headers: {
@@ -136,7 +136,7 @@ const TableTablePaymethods: FC = () => {
   }
 
   const deleteData =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/paymethods`,
+    await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods`,
       {
         method: 'DELETE',
         headers: {
@@ -173,7 +173,7 @@ const TableTablePaymethods: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Pay Methods</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Shipping Methods</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -202,19 +202,19 @@ const TableTablePaymethods: FC = () => {
           <Table.Body className="divide-y">
 
             {
-              dataTablePaymethods.length > 0?
-              dataTablePaymethods.map((elementTablePaymethods, idElement) => {
+              dataSendMethods.length > 0?
+              dataSendMethods.map((elementSendMethods, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
-                    <Table.Cell>{elementTablePaymethods.title}</Table.Cell>
-                    <Table.Cell>{elementTablePaymethods.description}</Table.Cell>
+                    <Table.Cell>{elementSendMethods.title}</Table.Cell>
+                    <Table.Cell>{elementSendMethods.description}</Table.Cell>
                     <Table.Cell>
-                      <img className="w-40 h-30" src={elementTablePaymethods.imgName} alt="Logo" />
+                      <img className="w-40 h-30" src={elementSendMethods.imgName} alt="Logo" />
                     </Table.Cell>
                     <Table.Cell>
                       <Button.Group>
-                        <Button onClick={() => getUpdateData(elementTablePaymethods.id)}><HiPencil /></Button>
-                        <Button color="failure" onClick={() => deleteData(elementTablePaymethods.id)}><HiTrash /></Button>
+                        <Button onClick={() => getUpdateData(elementSendMethods.id)}><HiPencil /></Button>
+                        <Button color="failure" onClick={() => deleteData(elementSendMethods.id)}><HiTrash /></Button>
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
@@ -354,4 +354,4 @@ const TableTablePaymethods: FC = () => {
   );
 };
 
-export default TableTablePaymethods;
+export default TableSendMethods;

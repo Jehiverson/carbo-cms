@@ -286,7 +286,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="MVP"
               />
             </div>
             <Select
@@ -307,7 +307,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Reverse"
               />
             </div>
             <Select
@@ -391,7 +391,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="MVP"
               />
             </div>
             <Select
@@ -413,7 +413,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Reverse"
               />
             </div>
             <Select

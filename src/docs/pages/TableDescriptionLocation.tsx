@@ -9,35 +9,37 @@ import {
 import Swal from 'sweetalert2'
 
 
-interface DataAboutUsProps {
+interface DataDescriptionLocationProps {
   id: string;
+  frase:string;
   description: string;
   imgName: string;
 }[];
 
-const TableAboutUs: FC = () => {
+const TableDescriptionLocation: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
-  const [dataAboutUs, setDataAboutUs] = useState<Array<DataAboutUsProps>>([]);
+  const [dataDescriptionLocation, setDataDescriptionLocation] = useState<Array<DataDescriptionLocationProps>>([]);
   //const [openModal, setOpenModal] = useState<boolean | undefined>();
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean | undefined>();
 
   const [uid, setUid] = useState<string | undefined>("");
   const [description, setDescription] = useState<string | undefined>("");
+  const [frase, setFrase] = useState<string | undefined>("");
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/aboutus')
+    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/locationdescription')
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
-    if (dataAboutUs) {
+    if (dataDescriptionLocation) {
       setLoading(false);
-      setDataAboutUs(getData);
+      setDataDescriptionLocation(getData);
     }
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/aboutus/${id}`)
+    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/locationdescription/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -45,6 +47,7 @@ const TableAboutUs: FC = () => {
     if (getDataId) {
       setUid(getDataId.id);
       setDescription(getDataId.description);
+      setFrase(getDataId.frase);
       setOpenModalUpdate(true);
     }
   };
@@ -53,12 +56,13 @@ const TableAboutUs: FC = () => {
     
       let dataUpdate = {
         "id": uid,
-        "description": description
+        "description": description,
+        "frase":frase
       };
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/aboutus`,
+      await fetch(`http://localhost:5000/carbografitos/us-central1/api/locationdescription`,
       {
         method: 'PATCH',
         headers: {
@@ -82,9 +86,8 @@ const TableAboutUs: FC = () => {
   const cleanData = () => {
       setUid("");
       setDescription("");
+      setFrase("");
   };
-
-
 
   useEffect(() => {
     getData();
@@ -94,7 +97,7 @@ const TableAboutUs: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>About Us</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Location Description</label>
         </div>
       </div>
       <br />
@@ -105,21 +108,23 @@ const TableAboutUs: FC = () => {
       ) : (
         <Table>
           <Table.Head>
+          <Table.HeadCell>Frase</Table.HeadCell>
             <Table.HeadCell>Description</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
             {
-              dataAboutUs.length > 0?
-              dataAboutUs.map((elementAboutUs, idElement) => {
+              dataDescriptionLocation.length > 0?
+              dataDescriptionLocation.map((elementDescriptionLocation, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
-                    <Table.Cell>{elementAboutUs.description}</Table.Cell>
+                    <Table.Cell>{elementDescriptionLocation.frase}</Table.Cell>
+                    <Table.Cell>{elementDescriptionLocation.description}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
-                        <Button onClick={() => getUpdateData(elementAboutUs.id)}><HiPencil /></Button>
-                        {/* <Button color="failure" onClick={() => deleteData(elementAboutUs.id)}><HiTrash /></Button> */}
+                        <Button onClick={() => getUpdateData(elementDescriptionLocation.id)}><HiPencil /></Button>
+                        {/* <Button color="failure" onClick={() => deleteData(elementDescriptionLocation.id)}><HiTrash /></Button> */}
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
@@ -159,6 +164,19 @@ const TableAboutUs: FC = () => {
               required={true}
               onChange={(e) => setDescription(e.target.value)}
             />
+            <div className="mb-2 block">
+              <Label
+                htmlFor="frase"
+                value="Frase"
+              />
+            </div>
+            <TextInput
+              id="frase"
+              type="text"
+              value={frase}
+              required={true}
+              onChange={(e) => setFrase(e.target.value)}
+            />
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -172,4 +190,4 @@ const TableAboutUs: FC = () => {
   );
 };
 
-export default TableAboutUs;
+export default TableDescriptionLocation;

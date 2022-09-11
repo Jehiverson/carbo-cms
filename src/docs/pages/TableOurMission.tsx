@@ -278,7 +278,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Reverse"
               />
             </div>
             <Select
@@ -362,7 +362,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Reverse"
               />
             </div>
             <Select

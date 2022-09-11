@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, Select } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, Select, FileInput } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -8,11 +8,13 @@ import {
 } from 'react-icons/hi';
 import Swal from 'sweetalert2';
 
+import { updateImage } from "../functions/generalFunctions";
 interface DataOurServicesProps {
   id: string;
   title: string;
   description: string;
   type: string;
+  imgName:string;
 }[];
 
 const TableOurServices: FC = () => {
@@ -26,6 +28,9 @@ const TableOurServices: FC = () => {
   const [title, setTitle] = useState<string | undefined>("");
   const [description, setDescription] = useState<string | undefined>("");
   const [type, setType] = useState<undefined | string>("");
+
+  const [imgName, setImgName] = useState<string | undefined>("");
+  const [imgFile, setImgFile] = useState<File | undefined>();
 
   const getDataOurServices = async () => {
     const getDataOurServices = await fetch('http://localhost:5000/carbografitos/us-central1/api/ourservices')
@@ -49,13 +54,16 @@ const TableOurServices: FC = () => {
       setTitle(getDataIdOurServices.title);
       setDescription(getDataIdOurServices.description);
       setType(getDataIdOurServices.type);
+      setImgName(getDataIdOurServices.imgName);
       setOpenModalUpdate(true);
     }
   };
 
   const insertDataOurServices = async () => {
 
-
+    if (imgFile) {
+      var urlImage = await updateImage(imgFile);
+      if (urlImage) {
         let dataInsert = {
           "title": title,
           "description": description,
@@ -83,15 +91,26 @@ const TableOurServices: FC = () => {
             'Your Register was add',
             'success'
           );
+        } else {
+          //Validar cuando el archivo este vacios
+        }
+  
+        }
   };
 
   const updateDataOurServices = async() =>{
-
+    var urlImage;
+    if(imgFile){
+      urlImage = await updateImage(imgFile); 
+    }else{
+      urlImage = imgName;
+    }
       let dataUpdate = {
         "id": uid,
         "title": title,
         "description": description,
-        "type": type
+        "type": type,
+        "imgName":urlImage
       };
 
       console.log(dataUpdate)
@@ -137,6 +156,14 @@ const TableOurServices: FC = () => {
       setTitle("");
       setDescription("");
       setType("");
+      setImgName("");
+      setImgFile(undefined);
+  };
+
+  const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
+    const fileList = e.target.files;
+    if (!fileList) return;
+    setImgFile(fileList[0]);
   };
 
   useEffect(() => {
@@ -147,7 +174,7 @@ const TableOurServices: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Our Mission</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Our Services</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -171,6 +198,7 @@ const TableOurServices: FC = () => {
             <Table.HeadCell>Title</Table.HeadCell>
             <Table.HeadCell>Description</Table.HeadCell>
             <Table.HeadCell>Type</Table.HeadCell>
+            <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -184,6 +212,9 @@ const TableOurServices: FC = () => {
                     <Table.Cell>{elementOurServices.description}</Table.Cell>
                     
                     <Table.Cell>{elementOurServices.type}</Table.Cell>
+                    <Table.Cell>
+                      <img className="w-40 h-30" src={elementOurServices.imgName} alt="Logo" />
+                    </Table.Cell>
                     <Table.Cell>
                       <Button.Group>
                         <Button onClick={() => getUpdateDataOurServices(elementOurServices.id)}><HiPencil /></Button>
@@ -242,7 +273,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Select Page where you will use"
               />
             </div>
             <Select
@@ -258,6 +289,19 @@ const TableOurServices: FC = () => {
               </option>
             </Select>
           </div>  
+          <div id="fileUpload">
+            <div className="mb-2 block">
+              <Label
+                htmlFor="file"
+                value="Image"
+              />
+            </div>
+            <FileInput
+              id="file"
+              helperText="Imagen que se mostrara dentro de la plantilla"
+              onChange={handleImageChange}
+            />
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => insertDataOurServices()}>save</Button>
@@ -311,7 +355,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Select Page where you will use"
               />
             </div>
             <Select
@@ -328,6 +372,20 @@ const TableOurServices: FC = () => {
               </option>
             </Select>
           </div>
+          <div id="fileUpload">
+            <div className="mb-2 block">
+              <Label
+                htmlFor="file"
+                value="Image"
+              />
+            </div>
+            <FileInput
+              id="file"
+              helperText="Imagen will see in the page"
+              onChange={handleImageChange}
+            />
+          </div>
+          <img className="w-80 h-30" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => updateDataOurServices()}>Update</Button>

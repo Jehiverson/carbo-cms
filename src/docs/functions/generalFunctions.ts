@@ -1,6 +1,8 @@
 
-import { storage } from "../../constants/firebaseConfig";
+import { storage,  firestore } from "../../constants/firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 const updateImage = async (imgFile: File ) => {
 
@@ -31,6 +33,26 @@ const updateImage = async (imgFile: File ) => {
 
 };
 
+const validLoginWithFirebase = (email: string, password: string) => {
+  const auth = getAuth();
+  const userData = signInWithEmailAndPassword(auth, email, password)
+  .then(async(userCredential) => {
+    const docRef = doc(firestore, "Users", userCredential.user.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { data : docSnap.data(), error : false, message : ""}
+    } else {
+      return { data:{}, error: true, message : "No such document!"}
+    } 
+  })
+  .catch((error) => {
+   return { data:{}, error: true, message : error.code}
+  });
+
+  return userData;
+}
+
 export {
-    updateImage
+    updateImage,
+    validLoginWithFirebase
 }

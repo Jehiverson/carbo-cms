@@ -302,7 +302,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Select Page where you will use"
               />
             </div>
             <Select
@@ -402,7 +402,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Select Page where you will use"
               />
             </div>
             <Select
