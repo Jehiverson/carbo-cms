@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -273,9 +273,9 @@ const TableProducts: FC = () => {
                 value="Sub Title"
               />
             </div>
-            <TextInput
+            <Textarea
               id="password1"
-              type="text"
+              rows={4}
               value={subTitle}
               required={true}
               onChange={(e) => setSubTitle(e.target.value)}
@@ -378,9 +378,9 @@ const TableProducts: FC = () => {
                 value="Subtitle"
               />
             </div>
-            <TextInput
+            <Textarea
               id="subtitle"
-              type="text"
+              rows={4}
               value={subTitle}
               required={true}
               onChange={(e) => setSubTitle(e.target.value)}
@@ -444,7 +444,7 @@ const TableProducts: FC = () => {
               onChange={handleImageChange}
             />
           </div>
-          <img className="w-80 h-30" src={imgName} alt="Logo" />
+          <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => updateData()}>Update</Button>

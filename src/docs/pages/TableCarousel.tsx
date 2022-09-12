@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -180,7 +180,7 @@ const TableCarousel: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Carousel</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Carousel (Home, About Us, About Company)</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -265,12 +265,12 @@ const TableCarousel: FC = () => {
                 value="Sub Title"
               />
             </div>
-            <TextInput
+            <Textarea
               id="password1"
-              type="text"
               value={subTitle}
               required={true}
               onChange={(e) => setSubTitle(e.target.value)}
+              rows={4}
             />
           </div>
 
@@ -349,9 +349,9 @@ const TableCarousel: FC = () => {
                 value="Subtitle"
               />
             </div>
-            <TextInput
+            <Textarea
               id="subtitle"
-              type="text"
+              rows={4}
               value={subTitle}
               required={true}
               onChange={(e) => setSubTitle(e.target.value)}

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -241,7 +241,7 @@ const TableOurMission: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Product</Modal.Header>
+        <Modal.Header>Create Our Mission</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
@@ -265,9 +265,9 @@ const TableOurMission: FC = () => {
                 value="Sub Title"
               />
             </div>
-            <TextInput
+            <Textarea
               id="password1"
-              type="text"
+              rows={4}
               value={subTitle}
               required={true}
               onChange={(e) => setSubTitle(e.target.value)}
@@ -319,7 +319,7 @@ const TableOurMission: FC = () => {
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Product</Modal.Header>
+        <Modal.Header>Update Our Mision</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -349,9 +349,9 @@ const TableOurMission: FC = () => {
                 value="Subtitle"
               />
             </div>
-            <TextInput
+            <Textarea
               id="subtitle"
-              type="text"
+              rows={4}
               value={subTitle}
               required={true}
               onChange={(e) => setSubTitle(e.target.value)}
@@ -393,7 +393,7 @@ const TableOurMission: FC = () => {
               onChange={handleImageChange}
             />
           </div>
-          <img className="w-80 h-30" src={imgName} alt="Logo" />
+          <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => updateDataOurMission()}>Update</Button>

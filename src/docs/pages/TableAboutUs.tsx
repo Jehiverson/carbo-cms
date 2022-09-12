@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput  } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput,Textarea } from '../../lib';
 import {
   HiPencil,/* 
   HiPlus,
@@ -137,7 +137,7 @@ const TableAboutUs: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Product</Modal.Header>
+        <Modal.Header>Update About Us</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -149,12 +149,12 @@ const TableAboutUs: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Description"
               />
             </div>
-            <TextInput
+            <Textarea
               id="title"
-              type="text"
+              rows={8}
               value={description}
               required={true}
               onChange={(e) => setDescription(e.target.value)}

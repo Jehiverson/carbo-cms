@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, Select, FileInput } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, Select, FileInput, Textarea } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -174,7 +174,7 @@ const TableOurServices: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Our Services</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Our Services And Specializations</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -236,7 +236,7 @@ const TableOurServices: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Our Services</Modal.Header>
+        <Modal.Header>Create Our Services And Specialization</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
@@ -257,12 +257,12 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Sub Title"
+                value="Description"
               />
             </div>
-            <TextInput
+            <Textarea
               id="password1"
-              type="text"
+              rows={4}
               value={description}
               required={true}
               onChange={(e) => setDescription(e.target.value)}
@@ -312,7 +312,7 @@ const TableOurServices: FC = () => {
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Our Services</Modal.Header>
+        <Modal.Header>Update Our Services Or Specialization</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -342,9 +342,9 @@ const TableOurServices: FC = () => {
                 value="Subtitle"
               />
             </div>
-            <TextInput
+            <Textarea
               id="subtitle"
-              type="text"
+              rows={4}
               value={description}
               required={true}
               onChange={(e) => setDescription(e.target.value)}
@@ -385,7 +385,7 @@ const TableOurServices: FC = () => {
               onChange={handleImageChange}
             />
           </div>
-          <img className="w-80 h-30" src={imgName} alt="Logo" />
+          <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => updateDataOurServices()}>Update</Button>

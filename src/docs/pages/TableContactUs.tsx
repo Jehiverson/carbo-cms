@@ -1,55 +1,61 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput,Textarea } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, Textarea } from '../../lib';
 import {
   HiPencil,/* 
   HiPlus,
   HiTrash, */
 } from 'react-icons/hi';
 import Swal from 'sweetalert2';
-import moment from 'moment';
 
-interface DataFooterProps {
+interface DataContactUsProps {
   id: string;
-  description: string;
-  title: string;
-  createdAt: Date;
+  phone1: string;
+  phone2: string;
+  address: string;
+  email: string;
+  schedule: string;
 }[];
 
-const TableFooter: FC = () => {
+const TableContactUs: FC = () => {
 
   const [loading, setLoading] = useState<boolean | undefined>(true);
-  const [dataFooter, setDataFooter] = useState<Array<DataFooterProps>>([]);
+  const [dataContactUs, setDataContactUs] = useState<Array<DataContactUsProps>>([]);
   //const [openModal, setOpenModal] = useState<boolean | undefined>();
   const [openModalUpdate, setOpenModalUpdate] = useState<boolean | undefined>();
 
   const [uid, setUid] = useState<string | undefined>("");
-  const [title, setTitle] = useState<string | undefined>("");
-  const [description, setDescription] = useState<string | undefined>("");
-  const [createdAt, setCreatedAt] = useState<Date | undefined>(new Date());
+  const [phone1, setPhone1] = useState<string | undefined>("");
+  const [phone2, setPhone2] = useState<string | undefined>("");
+  const [address, setAddress] = useState<string | undefined>("");
+  const [email, setEmail] = useState<string | undefined>("");
+  const [schedule, setSchedule] = useState<string | undefined>("");
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/footer')
+    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/contactus')
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
-    if (dataFooter) {
+    if (dataContactUs) {
       setLoading(false);
-      setDataFooter(getData);
+      setDataContactUs(getData);
     }
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/footer/${id}`)
+    console.log(1)
+    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/contactus/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
 
     if (getDataId) {
       setUid(getDataId.id);
-      setDescription(getDataId.description);
-      setTitle(getDataId.title);
-      setCreatedAt(getDataId.creatAt);
+      setPhone1(getDataId.phone1);
+      setPhone2(getDataId.phone2);
+      setAddress(getDataId.address);
+      setEmail(getDataId.email);
+      setSchedule(getDataId.schedule);
       setOpenModalUpdate(true);
     }
   };
@@ -58,12 +64,14 @@ const TableFooter: FC = () => {
 
       let dataUpdate = {
         "id": uid,
-        "title": title,
-        "description": description,
-        "createdAt": createdAt,
+        "phone1": phone1,
+        "phone2": phone2,
+        "address": address,
+        "email": email,
+        "schedule": schedule
       };
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/footer`,
+      await fetch(`http://localhost:5000/carbografitos/us-central1/api/contactus`,
       {
         method: 'PATCH',
         headers: {
@@ -86,9 +94,11 @@ const TableFooter: FC = () => {
 
   const cleanData = () => {
       setUid("");
-      setDescription("");
-      setTitle("");
-      setCreatedAt(new Date());
+      setPhone1("");
+      setPhone2("");
+      setAddress("");
+      setEmail("");
+      setSchedule("");
   };
 
   useEffect(() => {
@@ -99,7 +109,7 @@ const TableFooter: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Footer</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Contact Us</label>
         </div>
       </div>
       <br />
@@ -110,25 +120,29 @@ const TableFooter: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-          <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Date Created</Table.HeadCell>
+            <Table.HeadCell>Phone 1</Table.HeadCell>
+            <Table.HeadCell>Phone 2</Table.HeadCell>
+            <Table.HeadCell>Address</Table.HeadCell>
+            <Table.HeadCell>Email</Table.HeadCell>
+            <Table.HeadCell>Schedule</Table.HeadCell>
             <Table.HeadCell>Options</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
             {
-              dataFooter.length > 0?
-              dataFooter.map((elementFooter, idElement) => {
+              dataContactUs.length > 0?
+              dataContactUs.map((elementContactUs, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
-                    <Table.Cell>{elementFooter.title}</Table.Cell>
-                    <Table.Cell>{elementFooter.description}</Table.Cell>
-                    <Table.Cell> {moment(elementFooter.createdAt).format("DD-MM-YYYY")}</Table.Cell>
+                    <Table.Cell>{elementContactUs.phone1}</Table.Cell>
+                    <Table.Cell>{elementContactUs.phone2}</Table.Cell>
+                    <Table.Cell>{elementContactUs.address}</Table.Cell>
+                    <Table.Cell>{elementContactUs.email}</Table.Cell>
+                    <Table.Cell>{elementContactUs.schedule}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
-                        <Button onClick={() => getUpdateData(elementFooter.id)}><HiPencil /></Button>
-                        {/* <Button color="failure" onClick={() => deleteData(elementFooter.id)}><HiTrash /></Button> */}
+                        <Button onClick={() => getUpdateData(elementContactUs.id)}><HiPencil /></Button>
+                        {/* <Button color="failure" onClick={() => deleteData(elementContactUs.id)}><HiTrash /></Button> */}
                       </Button.Group>
                     </Table.Cell>
                   </Table.Row>
@@ -146,7 +160,7 @@ const TableFooter: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Footer</Modal.Header>
+        <Modal.Header>Update Contact Us</Modal.Header>
         <Modal.Body>
           <div>
             <TextInput
@@ -158,41 +172,67 @@ const TableFooter: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="title"
-                  value="Title"
+                  value="Phone 1"
                 />
               </div>
               <TextInput
                 id="title"
                 type="text"
-                value={title}
+                value={phone1}
                 required={true}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setPhone1(e.target.value)}
               />
               <div className="mb-2 block">
                 <Label
                   htmlFor="description"
-                  value="Description"
-                />
-              </div>
-              <Textarea
-                id="description"
-                rows={5}
-                value={description}
-                required={true}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <div className="mb-2 block">
-                <Label
-                  htmlFor="date"
-                  value="Date Created"
+                  value="Phone 2"
                 />
               </div>
               <TextInput
-                id="date"
-                type="date"
-                value={moment(createdAt).format("YYYY-MM-DD")}
+                id="description"
+                type="text"
+                value={phone2}
                 required={true}
-                onChange={(e) => setCreatedAt(new Date(moment(e.target.value).format("YYYY-MM-DD hh:mm:ss")))}
+                onChange={(e) => setPhone2(e.target.value)}
+              />
+              <div className="mb-2 block">
+                <Label
+                  htmlFor="description"
+                  value="Address"
+                />
+              </div>
+              <Textarea
+                id="Address"
+                rows={4}
+                value={address}
+                required={true}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+              <div className="mb-2 block">
+                <Label
+                  htmlFor="description"
+                  value="Email"
+                />
+              </div>
+              <TextInput
+                id="Email"
+                type="text"
+                value={email}
+                required={true}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <div className="mb-2 block">
+                <Label
+                  htmlFor="description"
+                  value="schedule"
+                />
+              </div>
+              <TextInput
+                id="schedule"
+                type="text"
+                value={schedule}
+                required={true}
+                onChange={(e) => setSchedule(e.target.value)}
               />
           </div>
         </Modal.Body>
@@ -207,4 +247,4 @@ const TableFooter: FC = () => {
   );
 };
 
-export default TableFooter;
+export default TableContactUs;

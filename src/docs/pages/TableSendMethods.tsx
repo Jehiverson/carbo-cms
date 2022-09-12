@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Textarea } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -232,7 +232,7 @@ const TableSendMethods: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Product</Modal.Header>
+        <Modal.Header>Create Shipping Methods</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
@@ -253,12 +253,12 @@ const TableSendMethods: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Sub Title"
+                value="Description"
               />
             </div>
-            <TextInput
+            <Textarea
               id="password1"
-              type="text"
+              rows={7}
               value={description}
               required={true}
               onChange={(e) => setDescription(e.target.value)}
@@ -289,7 +289,7 @@ const TableSendMethods: FC = () => {
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Product</Modal.Header>
+        <Modal.Header>Update Shipping Methods</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -316,12 +316,12 @@ const TableSendMethods: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Subtitle"
+                value="Description"
               />
             </div>
-            <TextInput
+            <Textarea
               id="subtitle"
-              type="text"
+              rows={7}
               value={description}
               required={true}
               onChange={(e) => setDescription(e.target.value)}
@@ -341,7 +341,7 @@ const TableSendMethods: FC = () => {
               onChange={handleImageChange}
             />
           </div>
-          <img className="w-80 h-30" src={imgName} alt="Logo" />
+          <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => updateData()}>Update</Button>

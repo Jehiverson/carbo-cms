@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -186,7 +186,7 @@ const TableClientTestimonials: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Client Testimonials</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Client Testimonials Or Our Team</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -249,7 +249,7 @@ const TableClientTestimonials: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Client Testimonials</Modal.Header>
+        <Modal.Header>Create Client Testimonials Or Our Team</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
@@ -289,9 +289,9 @@ const TableClientTestimonials: FC = () => {
                 value="description"
               />
             </div>
-            <TextInput
+            <Textarea
               id="description"
-              type="text"
+              rows={4}
               value={description}
               required={true}
               onChange={(e) => setDescription(e.target.value)}
@@ -343,7 +343,7 @@ const TableClientTestimonials: FC = () => {
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Client Testimonials</Modal.Header>
+        <Modal.Header>Update Client Testimonials Or Our Team</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -389,9 +389,9 @@ const TableClientTestimonials: FC = () => {
                 value="description"
               />
             </div>
-            <TextInput
+            <Textarea
               id="description"
-              type="text"
+              rows={4}
               value={description}
               required={true}
               onChange={(e) => setDescription(e.target.value)}
@@ -433,7 +433,7 @@ const TableClientTestimonials: FC = () => {
               onChange={handleImageChange}
             />
           </div>
-          <img className="w-80 h-30" src={imgName} alt="Logo" />
+          <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => updateDataClientTestimonials()}>Update</Button>

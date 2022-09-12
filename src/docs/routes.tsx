@@ -24,6 +24,8 @@ import TableFooter from './pages/TableFooter';
 import TableLocation from './pages/TableLocation';
 import TableDescriptionLocation from './pages/TableDescriptionLocation';
 import LoginPage from './pages/LoginPage';
+import LogoAndSlogan from './pages/TableLogoAndSlogan';
+import ContactUs from './pages/TableContactUs';
 
 export type ComponentCardItem = {
   className: string;
@@ -37,6 +39,7 @@ export type RouteProps = {
   component: ReactNode;
   group: boolean;
   card?: ComponentCardItem;
+  hidden: boolean;
 };
 
 export const routes: RouteProps[] = [
@@ -46,17 +49,19 @@ export const routes: RouteProps[] = [
     href: '/',
     component: <DashboardPage />,
     group: false,
+    hidden: false
   },
   {
     title: 'Carousel',
     icon: HiCollection,
-    href: '/tables',
+    href: '/carousel',
     component: <TableCarousel />,
     group: false,
     card: {
-      className: 'w-36',
+      className: 'w-36', 
       images: { light: 'carousel-light.svg', dark: 'carousel-dark.svg' },
     },
+    hidden: false
   },
   {
     title: 'Products',
@@ -68,6 +73,7 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'buttons.svg', dark: 'buttons.svg' },
     },
+    hidden: false
   },
   {
     title: 'Our Mission',
@@ -79,9 +85,10 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'card-light.svg', dark: 'card-dark.svg' },
     },
+    hidden: false
   },
   {
-    title: 'Client Testimonials',
+    title: 'Client Or Our Team',
     icon: HiAnnotation,
     href: '/clientTestimonials',
     component: <TableClientTestimonials />,
@@ -90,9 +97,10 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'card-light.svg', dark: 'card-dark.svg' },
     },
+    hidden: false
   },
   {
-    title: 'Our Services',
+    title: 'Our Services Or Specials',
     icon: HiNewspaper,
     href: '/OurServices',
     component: <TableOurServices />,
@@ -101,6 +109,7 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'rating-light.svg', dark: 'rating-dark.svg' },
     },
+    hidden: false
   },
   {
     title: 'About Us',
@@ -112,6 +121,7 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'modal-light.svg', dark: 'modal-dark.svg' },
     },
+    hidden: false
   },
   {
     title: 'Shipping Methods',
@@ -123,6 +133,7 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'list-group-light.svg', dark: 'list-group-dark.svg' },
     },
+    hidden: false
   },
   {
     title: 'Footer',
@@ -134,6 +145,7 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'button-group-light.svg', dark: 'button-group-dark.svg' },
     },
+    hidden: false
   },
   {
     title: 'Location',
@@ -145,13 +157,15 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'tooltips-light.svg', dark: 'tooltips-dark.svg' },
     },
+    hidden: false
   },
   {
     title: 'Login',
     icon: HiTable,
     href: '/login',
     component: <LoginPage />,
-    group: false
+    group: false,
+    hidden: true
   },
   {
     title: 'Location Description',
@@ -163,5 +177,30 @@ export const routes: RouteProps[] = [
       className: 'w-36',
       images: { light: 'tooltips-light.svg', dark: 'tooltips-dark.svg' },
     },
+    hidden: false
+  },
+  {
+    title: 'Logo And Slogan',
+    icon: HiNewspaper,
+    href: '/logoAndSlogan',
+    component: <LogoAndSlogan />,
+    group: false,
+    card: {
+      className: 'w-36',
+      images: { light: 'card-light.svg', dark: 'card-dark.svg' },
+    },
+    hidden: false
+  },
+  {
+    title: 'Contact Us',
+    icon: HiNewspaper,
+    href: '/contactUs',
+    component: <ContactUs />,
+    group: false,
+    card: {
+      className: 'w-36' ,
+      images: { light: 'alerts-light.svg', dark: 'alerts-dark.svg' },
+    },
+    hidden: false
   }
 ];

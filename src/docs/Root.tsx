@@ -62,18 +62,22 @@ export const Root: FC = () => {
             <Sidebar.ItemGroup>
               {
                 localStorage.getItem('session') != "true"?"":
-                routes.map(({ href, icon, title }, key) => (
-                  <Sidebar.Item
-                    key={key}
-                    icon={icon}
-                    as={Link}
-                    to={href}
-                    active={href === pathname}
-                    onClick={() => mainRef.current?.scrollTo({ top: 0 })}
-                  >
-                    {title}
-                  </Sidebar.Item>
-                ))
+                routes.map(({ href, icon, title, hidden }, key) => {
+                  if(hidden == false){
+                    return(
+                      <Sidebar.Item
+                        key={key}
+                        icon={icon}
+                        as={Link}
+                        to={href}
+                        active={href === pathname}
+                        onClick={() => mainRef.current?.scrollTo({ top: 0 })}
+                      >
+                        {title}
+                      </Sidebar.Item>
+                    )
+                  }
+                })
               }
             </Sidebar.ItemGroup>
           </Sidebar.Items>
