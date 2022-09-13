@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi';
 import Swal from 'sweetalert2'
 
+import { host } from "../../constants/defaultSetting";
 
 interface DataAboutUsProps {
   id: string;
@@ -26,7 +27,7 @@ const TableAboutUs: FC = () => {
   const [description, setDescription] = useState<string | undefined>("");
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/aboutus')
+    const getData = await fetch(`${host}aboutus`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -37,7 +38,7 @@ const TableAboutUs: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/aboutus/${id}`)
+    const getDataId = await fetch(`${host}aboutus/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -58,7 +59,7 @@ const TableAboutUs: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/aboutus`,
+      await fetch(`${host}aboutus`,
       {
         method: 'PATCH',
         headers: {
@@ -94,7 +95,7 @@ const TableAboutUs: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>About Us</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Sobre Nosotros</label>
         </div>
       </div>
       <br />
@@ -105,8 +106,8 @@ const TableAboutUs: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -127,7 +128,7 @@ const TableAboutUs: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -137,7 +138,7 @@ const TableAboutUs: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update About Us</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -149,7 +150,7 @@ const TableAboutUs: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Description"
+                value="Descripción"
               />
             </div>
             <Textarea
@@ -162,9 +163,9 @@ const TableAboutUs: FC = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateData()}>Update</Button>
+          <Button onClick={() => updateData()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

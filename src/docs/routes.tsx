@@ -44,7 +44,7 @@ export type RouteProps = {
 
 export const routes: RouteProps[] = [
   {
-    title: 'Principal',
+    title: 'Inicio',
     icon: HiHome,
     href: '/',
     component: <DashboardPage />,
@@ -64,7 +64,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Products',
+    title: 'Productos',
     icon: HiArchive,
     href: '/products',
     component: <TableProducts />,
@@ -76,7 +76,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Our Mission',
+    title: 'Nuestra Misión',
     icon: HiAnnotation,
     href: '/ourmission',
     component: <TableOurMission />,
@@ -88,7 +88,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Client Or Our Team',
+    title: 'Clientes y Nues. Equipo',
     icon: HiAnnotation,
     href: '/clientTestimonials',
     component: <TableClientTestimonials />,
@@ -100,7 +100,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Our Services Or Specials',
+    title: 'Nues. Servicios y Especializa.',
     icon: HiNewspaper,
     href: '/OurServices',
     component: <TableOurServices />,
@@ -112,7 +112,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'About Us',
+    title: 'Sobre Nosotros',
     icon: HiUsers,
     href: '/aboutUs',
     component: <TableAboutCompany />,
@@ -124,7 +124,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Shipping Methods',
+    title: 'Metodos De Pago',
     icon: HiOutlineCurrencyDollar,
     href: '/sendMethods',
     component: <TableSendMethods />,
@@ -148,7 +148,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Location',
+    title: 'Ubicacion',
     icon: HiLocationMarker,
     href: '/location',
     component: <TableLocation />,
@@ -168,7 +168,7 @@ export const routes: RouteProps[] = [
     hidden: true
   },
   {
-    title: 'Location Description',
+    title: 'Descripcion de Ubicacion',
     icon: HiLocationMarker,
     href: '/descriptionLocation',
     component: <TableDescriptionLocation />,
@@ -180,7 +180,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Logo And Slogan',
+    title: 'Logos y slogan',
     icon: HiNewspaper,
     href: '/logoAndSlogan',
     component: <LogoAndSlogan />,
@@ -192,7 +192,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Contact Us',
+    title: 'Contactanos',
     icon: HiNewspaper,
     href: '/contactUs',
     component: <ContactUs />,

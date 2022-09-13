@@ -9,6 +9,7 @@ import {
 import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
+import { host } from "../../constants/defaultSetting";
 
 interface DataCarouselProps {
   id: string;
@@ -34,7 +35,7 @@ const TableCarousel: FC = () => {
   const [pageUsed, setPageUsed] = useState<string | undefined>("");
 
   const getDataCarousel = async () => {
-    const getDataCarousel = await fetch('http://localhost:5000/carbografitos/us-central1/api/carousel')
+    const getDataCarousel = await fetch(`${host}carousel`)
       .then(response => response.json())
       .then(data => { return data.data });
 
@@ -45,7 +46,7 @@ const TableCarousel: FC = () => {
   };
 
   const getUpdateDataCarousel = async (id: string) => {
-    const getDataIdCarousel = await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel/${id}`)
+    const getDataIdCarousel = await fetch(`${host}carousel/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -73,7 +74,7 @@ const TableCarousel: FC = () => {
           "pageUsed": pageUsed
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel`,
+        await fetch(`${host}carousel`,
           {
             method: 'POST',
             headers: {
@@ -120,7 +121,7 @@ const TableCarousel: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel`,
+      await fetch(`${host}carousel`,
       {
         method: 'PATCH',
         headers: {
@@ -142,7 +143,7 @@ const TableCarousel: FC = () => {
   }
 
   const deleteDataCarousel =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/carousel`,
+    await fetch(`${host}carousel`,
       {
         method: 'DELETE',
         headers: {
@@ -180,7 +181,7 @@ const TableCarousel: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Carousel (Home, About Us, About Company)</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Carousel (Inicio, Sobre nosotros, Sobre la compañia)</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -188,7 +189,7 @@ const TableCarousel: FC = () => {
               setOpenModal(true)
               }
             }>
-            Add
+            Agregar
             <HiPlus className="ml-2 h-5 w-5" />
           </Button>
         </div>
@@ -201,11 +202,11 @@ const TableCarousel: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Sub Title</Table.HeadCell>
-            <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Page Used</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Titulo</Table.HeadCell>
+            <Table.HeadCell>Subtitulo</Table.HeadCell>
+            <Table.HeadCell>Imagen</Table.HeadCell>
+            <Table.HeadCell>Página de uso</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -231,7 +232,7 @@ const TableCarousel: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -241,13 +242,13 @@ const TableCarousel: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Carousel Image</Modal.Header>
+        <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="email1"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -262,7 +263,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Sub Title"
+                value="Subtitulo"
               />
             </div>
             <Textarea
@@ -278,7 +279,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Selecionar una imagen"
               />
             </div>
             <Select
@@ -287,10 +288,13 @@ const TableCarousel: FC = () => {
               onChange={(e) => {setPageUsed(e.target.value)}}
             >
               <option>
-                Home
+                Inicio
               </option>
               <option>
-                About Us
+                Sobre Nosotros
+              </option>
+              <option>
+                Sobre La Compañia
               </option>
             </Select>
           </div>
@@ -299,7 +303,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
@@ -311,15 +315,15 @@ const TableCarousel: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataCarousel()}>save</Button>
+          <Button onClick={() => insertDataCarousel()}>Guardar</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Carousel Image</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -331,7 +335,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -346,7 +350,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Subtitle"
+                value="Subtitulo"
               />
             </div>
             <Textarea
@@ -362,7 +366,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use the image"
+                value="Selecionar una imagen"
               />
             </div>
             <Select
@@ -372,13 +376,13 @@ const TableCarousel: FC = () => {
               onChange={(e) => {setPageUsed(e.target.value)}}
             >
               <option>
-                Home
+                Inicio
               </option>
               <option>
-                About Us
+                Sobre Nosotros
               </option>
               <option>
-                About Company
+                Sobre La Compañia
               </option>
             </Select>
           </div>
@@ -392,16 +396,16 @@ const TableCarousel: FC = () => {
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the page"
+              helperText="Seleccione imagen"
               onChange={handleImageChange}
             />
           </div>
           <img className="w-80 h-30" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataCarousel()}>Update</Button>
+          <Button onClick={() => updateDataCarousel()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

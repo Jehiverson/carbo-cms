@@ -1,0 +1,1 @@
+export const host = 'https://us-central1-carbografitos.cloudfunctions.net/api/'; 

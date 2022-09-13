@@ -9,7 +9,7 @@ import {
 import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
-
+import { host } from "../../constants/defaultSetting";
 interface DataProductsProps {
   id: string;
   title: string;
@@ -36,7 +36,7 @@ const TableProducts: FC = () => {
   const [reverse, setReverse] = useState<boolean | undefined | string>(false);
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/products')
+    const getData = await fetch(`${host}products`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -47,7 +47,7 @@ const TableProducts: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/products/${id}`)
+    const getDataId = await fetch(`${host}products/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -77,7 +77,7 @@ const TableProducts: FC = () => {
           "reverse": reverse
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/products`,
+        await fetch(`${host}products`,
           {
             method: 'POST',
             headers: {
@@ -125,7 +125,7 @@ const TableProducts: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/products`,
+      await fetch(`${host}products`,
       {
         method: 'PATCH',
         headers: {
@@ -147,7 +147,7 @@ const TableProducts: FC = () => {
   }
 
   const deleteData =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/products`,
+    await fetch(`${host}products`,
       {
         method: 'DELETE',
         headers: {
@@ -186,7 +186,7 @@ const TableProducts: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Products</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Productos</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -194,7 +194,7 @@ const TableProducts: FC = () => {
               setOpenModal(true)
               }
             }>
-            Add
+            Agregar
             <HiPlus className="ml-2 h-5 w-5" />
           </Button>
         </div>
@@ -207,12 +207,12 @@ const TableProducts: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Sub Title</Table.HeadCell>
-            <Table.HeadCell>Image</Table.HeadCell>
+            <Table.HeadCell>Titulo</Table.HeadCell>
+            <Table.HeadCell>Subtitulo</Table.HeadCell>
+            <Table.HeadCell>Imagen</Table.HeadCell>
             <Table.HeadCell>MVP</Table.HeadCell>
-            <Table.HeadCell>Reverse</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Volteada</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -239,7 +239,7 @@ const TableProducts: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -249,7 +249,7 @@ const TableProducts: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Product</Modal.Header>
+        <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
@@ -270,7 +270,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Sub Title"
+                value="Subtitulo"
               />
             </div>
             <Textarea
@@ -340,15 +340,15 @@ const TableProducts: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertData()}>save</Button>
+          <Button onClick={() => insertData()}>Guardar</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Product</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -360,7 +360,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -375,7 +375,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Subtitle"
+                value="Subtitulo"
               />
             </div>
             <Textarea
@@ -413,7 +413,7 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Reverse"
+                value="Voltear"
               />
             </div>
             <Select
@@ -435,21 +435,21 @@ const TableProducts: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the page"
+              helperText="Seleccione imagen"
               onChange={handleImageChange}
             />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateData()}>Update</Button>
+          <Button onClick={() => updateData()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

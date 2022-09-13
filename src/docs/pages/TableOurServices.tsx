@@ -9,6 +9,7 @@ import {
 import Swal from 'sweetalert2';
 
 import { updateImage } from "../functions/generalFunctions";
+import { host } from "../../constants/defaultSetting";
 interface DataOurServicesProps {
   id: string;
   title: string;
@@ -33,7 +34,7 @@ const TableOurServices: FC = () => {
   const [imgFile, setImgFile] = useState<File | undefined>();
 
   const getDataOurServices = async () => {
-    const getDataOurServices = await fetch('http://localhost:5000/carbografitos/us-central1/api/ourservices')
+    const getDataOurServices = await fetch(`${host}ourservices`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getDataOurServices)
@@ -44,7 +45,7 @@ const TableOurServices: FC = () => {
   };
 
   const getUpdateDataOurServices = async (id: string) => {
-    const getDataIdOurServices = await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices/${id}`)
+    const getDataIdOurServices = await fetch(`${host}ourservices/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -71,7 +72,7 @@ const TableOurServices: FC = () => {
         };
 
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices`,
+        await fetch(`${host}ourservices`,
           {
             method: 'POST',
             headers: {
@@ -115,7 +116,7 @@ const TableOurServices: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices`,
+      await fetch(`${host}ourservices`,
       {
         method: 'PATCH',
         headers: {
@@ -137,7 +138,7 @@ const TableOurServices: FC = () => {
   }
 
   const deleteDataOurServices =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourservices`,
+    await fetch(`${host}ourservices`,
       {
         method: 'DELETE',
         headers: {
@@ -174,7 +175,7 @@ const TableOurServices: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Our Services And Specializations</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Nuestros Servicios y Especializaciones </label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -182,7 +183,7 @@ const TableOurServices: FC = () => {
               setOpenModal(true)
               }
             }>
-            Add
+             Agregar
             <HiPlus className="ml-2 h-5 w-5" />
           </Button>
         </div>
@@ -195,11 +196,11 @@ const TableOurServices: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Type</Table.HeadCell>
-            <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Titulo</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
+            <Table.HeadCell>Tipo</Table.HeadCell>
+            <Table.HeadCell>Imagen</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -226,7 +227,7 @@ const TableOurServices: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -236,13 +237,13 @@ const TableOurServices: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Our Services And Specialization</Modal.Header>
+        <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="email1"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -257,7 +258,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Description"
+                value="Descripción"
               />
             </div>
             <Textarea
@@ -273,7 +274,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use"
+                value="Seleccionar Imagen"
               />
             </div>
             <Select
@@ -282,10 +283,10 @@ const TableOurServices: FC = () => {
               onChange={(e) => {setType(e.target.value)}}
             >
               <option>
-                Our Services
+                Nuestros Servicios
               </option>
               <option>
-                Our Specializations
+                Nuestras Especializaciones
               </option>
             </Select>
           </div>  
@@ -293,7 +294,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
@@ -304,15 +305,15 @@ const TableOurServices: FC = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataOurServices()}>save</Button>
+          <Button onClick={() => insertDataOurServices()}>Guardar</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Our Services Or Specialization</Modal.Header>
+        <Modal.Header>Acualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -324,7 +325,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -339,7 +340,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Subtitle"
+                value="Descripción"
               />
             </div>
             <Textarea
@@ -355,7 +356,7 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use"
+                value="Seleccionar Imagen"
               />
             </div>
             <Select
@@ -365,10 +366,10 @@ const TableOurServices: FC = () => {
               onChange={(e) => {setType(e.target.value)}}
             >
               <option>
-                Our Services
+                Nuestros Servicios
               </option>
               <option>
-                Our Specializations
+                Nuestras Especializaciones
               </option>
             </Select>
           </div>
@@ -376,21 +377,21 @@ const TableOurServices: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the page"
+              helperText="Seleccione imagen"
               onChange={handleImageChange}
             />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataOurServices()}>Update</Button>
+          <Button onClick={() => updateDataOurServices()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

@@ -9,7 +9,7 @@ import {
 import Swal from 'sweetalert2';
 
 import { updateImage } from "../functions/generalFunctions";
-
+import { host } from "../../constants/defaultSetting";
 interface DataClientTestimonialsProps {
   id: string;
   name: string;
@@ -37,7 +37,7 @@ const TableClientTestimonials: FC = () => {
   
 
   const getDataClientTestimonials = async () => {
-    const getDataClientTestimonials = await fetch('http://localhost:5000/carbografitos/us-central1/api/clientTestimonials')
+    const getDataClientTestimonials = await fetch(`${host}clientTestimonials`)
       .then(response => response.json())
       .then(data => { return data.data });
     
@@ -48,7 +48,7 @@ const TableClientTestimonials: FC = () => {
   };
 
   const getUpdateDataClientTestimonials = async (id: string) => {
-    const getDataIdClientTestimonials = await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials/${id}`)
+    const getDataIdClientTestimonials = await fetch(`${host}clientTestimonials/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -78,7 +78,7 @@ const TableClientTestimonials: FC = () => {
           "imgName": urlImage,
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials`,
+        await fetch(`${host}clientTestimonials`,
           {
             method: 'POST',
             headers: {
@@ -126,7 +126,7 @@ const TableClientTestimonials: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials`,
+      await fetch(`${host}clientTestimonials`,
       {
         method: 'PATCH',
         headers: {
@@ -148,7 +148,7 @@ const TableClientTestimonials: FC = () => {
   }
 
   const deleteDataClientTestimonials =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/clientTestimonials`,
+    await fetch(`${host}clientTestimonials`,
       {
         method: 'DELETE',
         headers: {
@@ -186,7 +186,7 @@ const TableClientTestimonials: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Client Testimonials Or Our Team</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Testimonio de clientes y Nuestro Equipo</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -194,7 +194,7 @@ const TableClientTestimonials: FC = () => {
               setOpenModal(true)
               }
             }>
-            Add
+            Agregar
             <HiPlus className="ml-2 h-5 w-5" />
           </Button>
         </div>
@@ -207,12 +207,12 @@ const TableClientTestimonials: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Name</Table.HeadCell>
-            <Table.HeadCell>Company</Table.HeadCell>
+            <Table.HeadCell>Nombre</Table.HeadCell>
+            <Table.HeadCell>Compañia</Table.HeadCell>
             <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>IMG</Table.HeadCell>
-            <Table.HeadCell>Page</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Imagen</Table.HeadCell>
+            <Table.HeadCell>Pagina</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -239,7 +239,7 @@ const TableClientTestimonials: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -249,13 +249,13 @@ const TableClientTestimonials: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Client Testimonials Or Our Team</Modal.Header>
+        <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="email1"
-                value="Name"
+                value="Nombre"
               />
             </div>
             <TextInput
@@ -270,7 +270,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Company"
+                value="Compañia"
               />
             </div>
             <TextInput
@@ -286,7 +286,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="description"
+                value="Descripcion"
               />
             </div>
             <Textarea
@@ -302,7 +302,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use"
+                value="Seleccionar Imagen"
               />
             </div>
             <Select
@@ -311,10 +311,10 @@ const TableClientTestimonials: FC = () => {
               onChange={(e) => {setPage(e.target.value)}}
             >
               <option>
-                Client Testimonials
+                Testimonio de clientes
               </option>
               <option>
-                Our Team
+                Nuestro Equipo
               </option>
             </Select>
           </div>
@@ -323,7 +323,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
@@ -335,15 +335,15 @@ const TableClientTestimonials: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataClientTestimonials()}>save</Button>
+          <Button onClick={() => insertDataClientTestimonials()}>Guardar</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Client Testimonials Or Our Team</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -355,7 +355,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Name"
+                value="Nombre"
               />
             </div>
             <TextInput
@@ -370,7 +370,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Company"
+                value="Compañia"
               />
             </div>
             <TextInput
@@ -386,7 +386,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="description"
+                value="Descripción"
               />
             </div>
             <Textarea
@@ -402,7 +402,7 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Select Page where you will use"
+                value="Seleccionar Imagen"
               />
             </div>
             <Select
@@ -412,10 +412,10 @@ const TableClientTestimonials: FC = () => {
               onChange={(e) => {setPage(e.target.value)}}
             >
               <option>
-                Client Testimonials
+                Testimonio de clientes
               </option>
               <option>
-                Our Team
+                Nuestro Equipo
               </option>
             </Select>
           </div>
@@ -424,21 +424,21 @@ const TableClientTestimonials: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the page"
+              helperText="Seleccione imagen"
               onChange={handleImageChange}
             />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataClientTestimonials()}>Update</Button>
+          <Button onClick={() => updateDataClientTestimonials()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

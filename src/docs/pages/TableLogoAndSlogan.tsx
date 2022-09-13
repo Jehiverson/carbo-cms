@@ -8,6 +8,7 @@ import {
 import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
+import { host } from "../../constants/defaultSetting";
 
 interface DataLogoAndSloganProps {
   id: string;
@@ -32,7 +33,7 @@ const TableLogoAndSlogan: FC = () => {
   const [imgFileTwo, setImgFileTwo] = useState<File | undefined>();
 
   const getDataLogoAndSlogan = async () => {
-    const getDataLogoAndSlogan = await fetch('http://localhost:5000/carbografitos/us-central1/api/logoAndSlogan')
+    const getDataLogoAndSlogan = await fetch(`${host}logoAndSlogan`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getDataLogoAndSlogan)
@@ -43,7 +44,7 @@ const TableLogoAndSlogan: FC = () => {
   };
 
   const getUpdateDataLogoAndSlogan = async (id: string) => {
-    const getDataIdLogoAndSlogan = await fetch(`http://localhost:5000/carbografitos/us-central1/api/logoAndSlogan/${id}`)
+    const getDataIdLogoAndSlogan = await fetch(`${host}logoAndSlogan/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -76,7 +77,7 @@ const TableLogoAndSlogan: FC = () => {
         "slogan": slogan
       };
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/logoAndSlogan`,
+      await fetch(`${host}logoAndSlogan`,
       {
         method: 'PATCH',
         headers: {
@@ -98,7 +99,7 @@ const TableLogoAndSlogan: FC = () => {
   }
 
 /*   const deleteDataLogoAndSlogan =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/logoAndSlogan`,
+    await fetch(`${host}logoAndSlogan`,
       {
         method: 'DELETE',
         headers: {
@@ -141,7 +142,7 @@ const TableLogoAndSlogan: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Logo And Slogan</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Logo Y Slogan</label>
         </div>
       </div>
       <br />
@@ -155,7 +156,7 @@ const TableLogoAndSlogan: FC = () => {
             <Table.HeadCell>Logo Navbar</Table.HeadCell>
             <Table.HeadCell>Logo Footer</Table.HeadCell>
             <Table.HeadCell>Slogan</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -181,7 +182,7 @@ const TableLogoAndSlogan: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -191,7 +192,7 @@ const TableLogoAndSlogan: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Logo And Slogan</Modal.Header>
+        <Modal.Header>Actualizar Logo Y Slogan</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -224,7 +225,7 @@ const TableLogoAndSlogan: FC = () => {
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the navbar"
+              helperText="Seleccione una imagen"
               onChange={handleImageChange}
             />
           </div>
@@ -239,7 +240,7 @@ const TableLogoAndSlogan: FC = () => {
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the footer"
+              helperText="Seleccione una imagen"
               onChange={handleImageChangeTwo}
             />
           </div>
@@ -247,9 +248,9 @@ const TableLogoAndSlogan: FC = () => {
 
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataLogoAndSlogan()}>Update</Button>
+          <Button onClick={() => updateDataLogoAndSlogan()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

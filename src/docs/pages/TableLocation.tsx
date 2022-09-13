@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi';
 import Swal from 'sweetalert2'
 
+import { host } from "../../constants/defaultSetting";
 interface DataLocationProps {
   id: string;
   title: string;
@@ -30,7 +31,7 @@ const TableLocation: FC = () => {
   const [latitud, setLatitud] = useState<string | undefined>("");
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/location')
+    const getData = await fetch(`${host}location`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -41,7 +42,7 @@ const TableLocation: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/location/${id}`)
+    const getDataId = await fetch(`${host}location/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -68,7 +69,7 @@ const TableLocation: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/location`,
+      await fetch(`${host}location`,
       {
         method: 'PATCH',
         headers: {
@@ -82,6 +83,7 @@ const TableLocation: FC = () => {
       cleanData();
       setLoading(true);
       setOpenModalUpdate(false);
+
       Swal.fire(
         'Success',
         'Your Register was update',
@@ -106,7 +108,7 @@ const TableLocation: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Location</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Ubicación</label>
         </div>
       </div>
       <br />
@@ -117,11 +119,11 @@ const TableLocation: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
+            <Table.HeadCell>Titulo</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
             <Table.HeadCell>Latitud</Table.HeadCell>
             <Table.HeadCell>Longuitud</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -145,7 +147,7 @@ const TableLocation: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -155,7 +157,7 @@ const TableLocation: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Location</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -167,7 +169,7 @@ const TableLocation: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -181,7 +183,7 @@ const TableLocation: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="description"
-                value="Description"
+                value="Descripción"
               />
             </div>
             <Textarea
@@ -223,9 +225,9 @@ const TableLocation: FC = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateData()}>Update</Button>
+          <Button onClick={() => updateData()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

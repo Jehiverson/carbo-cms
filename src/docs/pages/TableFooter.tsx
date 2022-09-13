@@ -9,6 +9,7 @@ import {
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
+import { host } from "../../constants/defaultSetting";
 interface DataFooterProps {
   id: string;
   description: string;
@@ -29,7 +30,7 @@ const TableFooter: FC = () => {
   const [createdAt, setCreatedAt] = useState<Date | undefined>(new Date());
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/footer')
+    const getData = await fetch(`${host}footer`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -40,7 +41,7 @@ const TableFooter: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/footer/${id}`)
+    const getDataId = await fetch(`${host}footer/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -63,7 +64,7 @@ const TableFooter: FC = () => {
         "createdAt": createdAt,
       };
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/footer`,
+      await fetch(`${host}footer`,
       {
         method: 'PATCH',
         headers: {
@@ -110,10 +111,10 @@ const TableFooter: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-          <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Date Created</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+          <Table.HeadCell>Titulo</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
+            <Table.HeadCell>Fecha Creación</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -136,7 +137,7 @@ const TableFooter: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -146,7 +147,7 @@ const TableFooter: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Footer</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
             <TextInput
@@ -158,7 +159,7 @@ const TableFooter: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="title"
-                  value="Title"
+                  value="Titulo"
                 />
               </div>
               <TextInput
@@ -171,7 +172,7 @@ const TableFooter: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="description"
-                  value="Description"
+                  value="Descripción"
                 />
               </div>
               <Textarea
@@ -184,7 +185,7 @@ const TableFooter: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="date"
-                  value="Date Created"
+                  value="Fecha de creación"
                 />
               </div>
               <TextInput
@@ -197,9 +198,9 @@ const TableFooter: FC = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateData()}>Update</Button>
+          <Button onClick={() => updateData()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

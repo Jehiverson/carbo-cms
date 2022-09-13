@@ -9,6 +9,7 @@ import {
 import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
+import { host } from "../../constants/defaultSetting";
 
 interface DataAboutCompanyProps {
   id: string;
@@ -29,7 +30,7 @@ const TableAboutCompany: FC = () => {
   const [imgFile, setImgFile] = useState<File | undefined>();
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/aboutus')
+    const getData = await fetch(`${host}aboutus`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -40,7 +41,7 @@ const TableAboutCompany: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/aboutus/${id}`)
+    const getDataId = await fetch(`${host}aboutus/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -69,7 +70,7 @@ const TableAboutCompany: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/aboutus`,
+      await fetch(`${host}aboutus`,
       {
         method: 'PATCH',
         headers: {
@@ -149,7 +150,7 @@ const TableAboutCompany: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -192,7 +193,7 @@ const TableAboutCompany: FC = () => {
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the page"
+              helperText="Seleccione imagen"
               onChange={handleImageChange}
             />
           </div>
@@ -201,7 +202,7 @@ const TableAboutCompany: FC = () => {
         <Modal.Footer>
           <Button onClick={() => updateData()}>Update</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

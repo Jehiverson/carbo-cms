@@ -9,6 +9,7 @@ import {
 import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
+import { host } from "../../constants/defaultSetting";
 
 interface DataSendMethodsProps {
   id: string;
@@ -31,7 +32,7 @@ const TableSendMethods: FC = () => {
   const [imgFile, setImgFile] = useState<File | undefined>();
   
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/sendmethods')
+    const getData = await fetch(`${host}sendmethods`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -42,7 +43,7 @@ const TableSendMethods: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods/${id}`)
+    const getDataId = await fetch(`${host}sendmethods/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -68,7 +69,7 @@ const TableSendMethods: FC = () => {
           "description": description
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods`,
+        await fetch(`${host}sendmethods`,
           {
             method: 'POST',
             headers: {
@@ -114,7 +115,7 @@ const TableSendMethods: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods`,
+      await fetch(`${host}sendmethods`,
       {
         method: 'PATCH',
         headers: {
@@ -136,7 +137,7 @@ const TableSendMethods: FC = () => {
   }
 
   const deleteData =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/sendmethods`,
+    await fetch(`${host}sendmethods`,
       {
         method: 'DELETE',
         headers: {
@@ -173,7 +174,7 @@ const TableSendMethods: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Shipping Methods</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Metodos De Pago</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -181,7 +182,7 @@ const TableSendMethods: FC = () => {
               setOpenModal(true)
               }
             }>
-            Add
+            Agregar
             <HiPlus className="ml-2 h-5 w-5" />
           </Button>
         </div>
@@ -194,10 +195,10 @@ const TableSendMethods: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Titulo</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
+            <Table.HeadCell>Imagen</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -222,7 +223,7 @@ const TableSendMethods: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -232,13 +233,13 @@ const TableSendMethods: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Shipping Methods</Modal.Header>
+        <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="email1"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -253,7 +254,7 @@ const TableSendMethods: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Description"
+                value="Descripción"
               />
             </div>
             <Textarea
@@ -269,7 +270,7 @@ const TableSendMethods: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
@@ -281,15 +282,15 @@ const TableSendMethods: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertData()}>save</Button>
+          <Button onClick={() => insertData()}>Guardar</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Shipping Methods</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -301,7 +302,7 @@ const TableSendMethods: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -316,7 +317,7 @@ const TableSendMethods: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Description"
+                value="Descripción"
               />
             </div>
             <Textarea
@@ -332,21 +333,21 @@ const TableSendMethods: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the page"
+              helperText="Seleccione imagen"
               onChange={handleImageChange}
             />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateData()}>Update</Button>
+          <Button onClick={() => updateData()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

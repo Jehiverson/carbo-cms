@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi';
 import Swal from 'sweetalert2'
 
+import { host } from "../../constants/defaultSetting";
 
 interface DataDescriptionLocationProps {
   id: string;
@@ -28,7 +29,7 @@ const TableDescriptionLocation: FC = () => {
   const [frase, setFrase] = useState<string | undefined>("");
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/locationdescription')
+    const getData = await fetch(`${host}locationdescription`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -39,7 +40,7 @@ const TableDescriptionLocation: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/locationdescription/${id}`)
+    const getDataId = await fetch(`${host}locationdescription/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -62,7 +63,7 @@ const TableDescriptionLocation: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/locationdescription`,
+      await fetch(`${host}locationdescription`,
       {
         method: 'PATCH',
         headers: {
@@ -97,7 +98,7 @@ const TableDescriptionLocation: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Location Description</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Descripción De Ubicación</label>
         </div>
       </div>
       <br />
@@ -109,8 +110,8 @@ const TableDescriptionLocation: FC = () => {
         <Table>
           <Table.Head>
           <Table.HeadCell>Frase</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -132,7 +133,7 @@ const TableDescriptionLocation: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -142,7 +143,7 @@ const TableDescriptionLocation: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Description Location</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -154,7 +155,7 @@ const TableDescriptionLocation: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Descripción"
               />
             </div>
             <TextInput
@@ -180,9 +181,9 @@ const TableDescriptionLocation: FC = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateData()}>Update</Button>
+          <Button onClick={() => updateData()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

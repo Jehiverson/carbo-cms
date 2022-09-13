@@ -46,7 +46,7 @@ Default.args = {
       <Modal.Footer>
         <Button onClick={action('close')}>I accept</Button>
         <Button color="gray" onClick={action('close')}>
-          Decline
+          Cancelar
         </Button>
       </Modal.Footer>
     </>

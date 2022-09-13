@@ -67,7 +67,7 @@ const TestModal = ({ root }: Pick<ModalProps, 'root'>): JSX.Element => {
         <Modal.Footer>
           <Button onClick={() => setOpen(false)}>I accept</Button>
           <Button color="gray" onClick={() => setOpen(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

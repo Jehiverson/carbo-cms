@@ -9,7 +9,7 @@ import {
 import Swal from 'sweetalert2'
 
 import { updateImage } from "../functions/generalFunctions";
-
+import { host } from "../../constants/defaultSetting";
 interface DataOurMissionProps {
   id: string;
   title: string;
@@ -34,7 +34,7 @@ const TableOurMission: FC = () => {
   const [type, setType] = useState<boolean | undefined | string>(false);
 
   const getDataOurMission = async () => {
-    const getDataOurMission = await fetch('http://localhost:5000/carbografitos/us-central1/api/ourmission')
+    const getDataOurMission = await fetch(`${host}ourmission`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getDataOurMission)
@@ -45,7 +45,7 @@ const TableOurMission: FC = () => {
   };
 
   const getUpdateDataOurMission = async (id: string) => {
-    const getDataIdOurMission = await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission/${id}`)
+    const getDataIdOurMission = await fetch(`${host}ourmission/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -73,7 +73,7 @@ const TableOurMission: FC = () => {
           "type": type,
         };
 
-        await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+        await fetch(`${host}ourmission`,
           {
             method: 'POST',
             headers: {
@@ -120,7 +120,7 @@ const TableOurMission: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+      await fetch(`${host}ourmission`,
       {
         method: 'PATCH',
         headers: {
@@ -142,7 +142,7 @@ const TableOurMission: FC = () => {
   }
 
   const deleteDataOurMission =async(uid:string) => {
-    await fetch(`http://localhost:5000/carbografitos/us-central1/api/ourmission`,
+    await fetch(`${host}ourmission`,
       {
         method: 'DELETE',
         headers: {
@@ -180,7 +180,7 @@ const TableOurMission: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Our Mission</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Nuestra Misión</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -188,7 +188,7 @@ const TableOurMission: FC = () => {
               setOpenModal(true)
               }
             }>
-            Add
+            Agregar
             <HiPlus className="ml-2 h-5 w-5" />
           </Button>
         </div>
@@ -201,11 +201,11 @@ const TableOurMission: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Title</Table.HeadCell>
-            <Table.HeadCell>Sub Title</Table.HeadCell>
-            <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Type</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Titulo</Table.HeadCell>
+            <Table.HeadCell>Subtitulo</Table.HeadCell>
+            <Table.HeadCell>Imagen</Table.HeadCell>
+            <Table.HeadCell>Voltear</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -231,7 +231,7 @@ const TableOurMission: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -241,13 +241,13 @@ const TableOurMission: FC = () => {
       )}
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Create Our Mission</Modal.Header>
+        <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
             <div className="mb-2 block">
               <Label
                 htmlFor="email1"
-                value="Title"
+                value="Titutulo"
               />
             </div>
             <TextInput
@@ -262,7 +262,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="password1"
-                value="Sub Title"
+                value="Subtitulo"
               />
             </div>
             <Textarea
@@ -278,7 +278,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Reverse"
+                value="Voltear"
               />
             </div>
             <Select
@@ -299,7 +299,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
@@ -311,15 +311,15 @@ const TableOurMission: FC = () => {
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertDataOurMission()}>save</Button>
+          <Button onClick={() => insertDataOurMission()}>Guardar</Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Our Mision</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
           <TextInput
@@ -331,7 +331,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Title"
+                value="Titulo"
               />
             </div>
             <TextInput
@@ -346,7 +346,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="subtitle"
-                value="Subtitle"
+                value="Subtitulo"
               />
             </div>
             <Textarea
@@ -362,7 +362,7 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Reverse"
+                value="Voltear"
               />
             </div>
             <Select
@@ -384,21 +384,21 @@ const TableOurMission: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="file"
-                value="Image"
+                value="Imagen"
               />
             </div>
             <FileInput
               id="file"
-              helperText="Imagen will see in the page"
+              helperText="Seleccione imagen"
               onChange={handleImageChange}
             />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateDataOurMission()}>Update</Button>
+          <Button onClick={() => updateDataOurMission()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>

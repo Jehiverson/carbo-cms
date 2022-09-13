@@ -16,11 +16,9 @@ export const Root: FC = () => {
 
   const validSession = () => {
     let session  = localStorage.getItem("session");
-    console.log(session)
     if(session == "false" || session == null){
       navigate('/login')
     }else{
-      console.log(2,pathname);
       navigate(pathname);
     }
   };

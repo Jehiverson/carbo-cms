@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi';
 import Swal from 'sweetalert2';
 
+import { host } from "../../constants/defaultSetting";
 interface DataContactUsProps {
   id: string;
   phone1: string;
@@ -32,7 +33,7 @@ const TableContactUs: FC = () => {
   const [schedule, setSchedule] = useState<string | undefined>("");
 
   const getData = async () => {
-    const getData = await fetch('http://localhost:5000/carbografitos/us-central1/api/contactus')
+    const getData = await fetch(`${host}contactus`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -44,7 +45,7 @@ const TableContactUs: FC = () => {
 
   const getUpdateData = async (id: string) => {
     console.log(1)
-    const getDataId = await fetch(`http://localhost:5000/carbografitos/us-central1/api/contactus/${id}`)
+    const getDataId = await fetch(`${host}contactus/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -71,7 +72,7 @@ const TableContactUs: FC = () => {
         "schedule": schedule
       };
 
-      await fetch(`http://localhost:5000/carbografitos/us-central1/api/contactus`,
+      await fetch(`${host}contactus`,
       {
         method: 'PATCH',
         headers: {
@@ -109,7 +110,7 @@ const TableContactUs: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Contact Us</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Contactanos</label>
         </div>
       </div>
       <br />
@@ -120,12 +121,12 @@ const TableContactUs: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-            <Table.HeadCell>Phone 1</Table.HeadCell>
-            <Table.HeadCell>Phone 2</Table.HeadCell>
-            <Table.HeadCell>Address</Table.HeadCell>
-            <Table.HeadCell>Email</Table.HeadCell>
-            <Table.HeadCell>Schedule</Table.HeadCell>
-            <Table.HeadCell>Options</Table.HeadCell>
+            <Table.HeadCell>Teléfono 1</Table.HeadCell>
+            <Table.HeadCell>Teléfono 2</Table.HeadCell>
+            <Table.HeadCell>Dirección</Table.HeadCell>
+            <Table.HeadCell>Correo</Table.HeadCell>
+            <Table.HeadCell>Horarios</Table.HeadCell>
+            <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
 
@@ -150,7 +151,7 @@ const TableContactUs: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> Data Not Found </Table.Cell>
+                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -160,7 +161,7 @@ const TableContactUs: FC = () => {
       )}
 
       <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
-        <Modal.Header>Update Contact Us</Modal.Header>
+        <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
             <TextInput
@@ -172,7 +173,7 @@ const TableContactUs: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="title"
-                  value="Phone 1"
+                  value="Teléfono 1"
                 />
               </div>
               <TextInput
@@ -185,7 +186,7 @@ const TableContactUs: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="description"
-                  value="Phone 2"
+                  value="Teléfono 2"
                 />
               </div>
               <TextInput
@@ -198,7 +199,7 @@ const TableContactUs: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="description"
-                  value="Address"
+                  value="Dirección"
                 />
               </div>
               <Textarea
@@ -211,7 +212,7 @@ const TableContactUs: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="description"
-                  value="Email"
+                  value="Correo"
                 />
               </div>
               <TextInput
@@ -224,7 +225,7 @@ const TableContactUs: FC = () => {
               <div className="mb-2 block">
                 <Label
                   htmlFor="description"
-                  value="schedule"
+                  value="Horario"
                 />
               </div>
               <TextInput
@@ -237,9 +238,9 @@ const TableContactUs: FC = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => updateData()}>Update</Button>
+          <Button onClick={() => updateData()}>Actualizar</Button>
           <Button color="gray" onClick={() => setOpenModalUpdate(false)}>
-            Decline
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
