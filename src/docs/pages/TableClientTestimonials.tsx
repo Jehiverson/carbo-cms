@@ -209,9 +209,9 @@ const TableClientTestimonials: FC = () => {
           <Table.Head>
             <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Compañia</Table.HeadCell>
-            <Table.HeadCell>Description</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
             <Table.HeadCell>Imagen</Table.HeadCell>
-            <Table.HeadCell>Pagina</Table.HeadCell>
+            <Table.HeadCell>Página</Table.HeadCell>
             <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
