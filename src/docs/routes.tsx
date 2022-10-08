@@ -88,7 +88,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Clientes y Nues. Equipo',
+    title: 'Clientes y Ns. Equipo',
     icon: HiAnnotation,
     href: '/clientTestimonials',
     component: <TableClientTestimonials />,
@@ -100,7 +100,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Nues. Servicios y Especializa.',
+    title: 'Especiales y Servicios',
     icon: HiNewspaper,
     href: '/OurServices',
     component: <TableOurServices />,
@@ -124,9 +124,9 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Metodos De Pago',
+    title: 'Metodos De Envio',
     icon: HiOutlineCurrencyDollar,
-    href: '/sendMethods',
+    href: '/shippingMethods',
     component: <TableSendMethods />,
     group: false,
     card: {
@@ -148,7 +148,7 @@ export const routes: RouteProps[] = [
     hidden: false
   },
   {
-    title: 'Ubicacion',
+    title: 'Ubicación',
     icon: HiLocationMarker,
     href: '/location',
     component: <TableLocation />,
@@ -168,7 +168,7 @@ export const routes: RouteProps[] = [
     hidden: true
   },
   {
-    title: 'Descripcion de Ubicacion',
+    title: 'Descripción de Ubicación',
     icon: HiLocationMarker,
     href: '/descriptionLocation',
     component: <TableDescriptionLocation />,

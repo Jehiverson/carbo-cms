@@ -63,6 +63,50 @@ const TableContactUs: FC = () => {
 
   const updateData = async() =>{
 
+    if(phone1?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de télefono 1 vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(phone2?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de télefono 2 vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(address?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de dirección vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(email?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de correo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(schedule?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de horario vacio",
+        'error'
+      );
+      return;
+    }
       let dataUpdate = {
         "id": uid,
         "phone1": phone1,
@@ -87,8 +131,8 @@ const TableContactUs: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }

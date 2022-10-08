@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea, Alert } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -30,11 +30,11 @@ const TableClientTestimonials: FC = () => {
   const [name, setName] = useState<string | undefined>("");
   const [company, setCompany] = useState<string | undefined>("");
   const [description, setDescription] = useState<string | undefined>("");
-  const [page, setPage] = useState<string | undefined | boolean>(false);
+  const [page, setPage] = useState<string | undefined>("Testimonio de clientes");
 
   const [imgName, setImgName] = useState<string | undefined>("");
   const [imgFile, setImgFile] = useState<File | undefined>();
-  
+  const [imgFileName, setImgFileName] = useState<string>("");
 
   const getDataClientTestimonials = async () => {
     const getDataClientTestimonials = await fetch(`${host}clientTestimonials`)
@@ -48,6 +48,7 @@ const TableClientTestimonials: FC = () => {
   };
 
   const getUpdateDataClientTestimonials = async (id: string) => {
+    setImgFileName("");
     const getDataIdClientTestimonials = await fetch(`${host}clientTestimonials/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
@@ -65,6 +66,33 @@ const TableClientTestimonials: FC = () => {
   };
 
   const insertDataClientTestimonials = async () => {
+
+    if(name?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Nombre vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(company?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Compañia vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
 
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
@@ -94,20 +122,58 @@ const TableClientTestimonials: FC = () => {
           setOpenModal(false);
 
           Swal.fire(
-            'Success',
-            'Your Register was add',
+            "Éxito",
+            "Tu registro fue agregado",
             'success'
           );
 
       } else {
-        //Validar cuando el archivo este vacios
+        Swal.fire(
+          "Error",
+          "Error, al agregar archivo.",
+          'error'
+        );
       }
 
+    }else{
+      Swal.fire(
+        "Error",
+        "Error, al agregar archivo.",
+        'error'
+      );
     }
 
   };
 
   const updateDataClientTestimonials = async() =>{
+
+    if(name?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Nombre vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(company?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Compañia vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
+    
     var urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
@@ -124,8 +190,6 @@ const TableClientTestimonials: FC = () => {
           "imgName": urlImage,
       };
 
-      console.log(dataUpdate)
-
       await fetch(`${host}clientTestimonials`,
       {
         method: 'PATCH',
@@ -141,8 +205,8 @@ const TableClientTestimonials: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -167,15 +231,17 @@ const TableClientTestimonials: FC = () => {
       setName("");
       setCompany("");
       setDescription("");
-      setPage("");
+      setPage("Testimonio de clientes");
       setImgName("");
       setImgFile(undefined);
+      setImgFileName("");
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name)
   };
 
   useEffect(() => {
@@ -239,7 +305,7 @@ const TableClientTestimonials: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
+                    <Table.Cell colSpan={6}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -251,6 +317,7 @@ const TableClientTestimonials: FC = () => {
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
+
           <div>
             <div className="mb-2 block">
               <Label
@@ -266,6 +333,7 @@ const TableClientTestimonials: FC = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
           <div>
             <div className="mb-2 block">
               <Label
@@ -309,6 +377,7 @@ const TableClientTestimonials: FC = () => {
               id="page-img"
               required={true}
               onChange={(e) => {setPage(e.target.value)}}
+              value={page}
             >
               <option>
                 Testimonio de clientes
@@ -330,7 +399,21 @@ const TableClientTestimonials: FC = () => {
               id="file"
               helperText="Imagen que se mostrara dentro de la plantilla"
               onChange={handleImageChange}
+              value={""}
             />
+            <br />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
           </div>
           
         </Modal.Body>
@@ -346,7 +429,7 @@ const TableClientTestimonials: FC = () => {
         <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
-          <TextInput
+            <TextInput
               type="hidden"
               value={uid}
               required={true}
@@ -366,6 +449,7 @@ const TableClientTestimonials: FC = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
           <div>
             <div className="mb-2 block">
               <Label
@@ -431,9 +515,24 @@ const TableClientTestimonials: FC = () => {
               id="file"
               helperText="Seleccione imagen"
               onChange={handleImageChange}
+              value={""}
             />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
+            <br />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
+          
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => updateDataClientTestimonials()}>Actualizar</Button>

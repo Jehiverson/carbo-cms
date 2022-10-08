@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Textarea } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Textarea, Alert } from '../../lib';
 import {
   HiPencil,
 /*   HiTrash, */
@@ -28,9 +28,11 @@ const TableLogoAndSlogan: FC = () => {
 
   const [imgName, setImgName] = useState<string | undefined>("");
   const [imgFile, setImgFile] = useState<File | undefined>();
-  
+  const [imgFileName, setImgFileName] = useState<string>("");
+
   const [imgNameTwo, setImgNameTwo] = useState<string | undefined>("");
   const [imgFileTwo, setImgFileTwo] = useState<File | undefined>();
+  const [imgFileNameTwo, setImgFileNameTwo] = useState<string>("");
 
   const getDataLogoAndSlogan = async () => {
     const getDataLogoAndSlogan = await fetch(`${host}logoAndSlogan`)
@@ -59,6 +61,16 @@ const TableLogoAndSlogan: FC = () => {
   };
 
   const updateDataLogoAndSlogan = async() =>{
+
+    if(slogan?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de slogan vacio",
+        'error'
+      );
+      return;
+    }
+
     let urlImage;
     let urlImageTwo;
 
@@ -92,8 +104,8 @@ const TableLogoAndSlogan: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -126,12 +138,15 @@ const TableLogoAndSlogan: FC = () => {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name)
+    
   };
 
   const handleImageChangeTwo = function (e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFileTwo(fileList[0]);
+    setImgFileNameTwo(fileList[0].name)
   };
 
   useEffect(() => {
@@ -166,10 +181,10 @@ const TableLogoAndSlogan: FC = () => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
                    <Table.Cell>
-                      <img className="w-40 h-30" src={elementLogoAndSlogan.navbar} alt="Logo" />
+                      <img className="w-40 h-25" src={elementLogoAndSlogan.navbar} alt="Logo" />
                     </Table.Cell>
                     <Table.Cell>
-                      <img className="w-40 h-30" src={elementLogoAndSlogan.footer} alt="Logo" />
+                      <img className="w-40 h-25" src={elementLogoAndSlogan.footer} alt="Logo" />
                     </Table.Cell>
                     <Table.Cell>{elementLogoAndSlogan.slogan}</Table.Cell>
                     <Table.Cell>
@@ -227,9 +242,23 @@ const TableLogoAndSlogan: FC = () => {
               id="file"
               helperText="Seleccione una imagen"
               onChange={handleImageChange}
+              value={""}
             />
+            {
+                imgFileName?.length > 0 && (
+                  <Alert color="info">
+                    <span>
+                    <span className="font-medium">
+                      Archivo Cargado: 
+                    </span>
+                      {" "+imgFileName}
+                    </span>
+                  </Alert>
+                )
+              }
+              <br />
           </div>
-          <img className="w-50 h-20" src={imgName} alt="Logo" />
+          <img className="w-30 h-10" src={imgName} alt="Logo" />
 
           <div id="fileUpload">
             <div className="mb-2 block">
@@ -242,9 +271,23 @@ const TableLogoAndSlogan: FC = () => {
               id="file"
               helperText="Seleccione una imagen"
               onChange={handleImageChangeTwo}
+              value={""}
             />
+            {
+                imgFileNameTwo?.length > 0 && (
+                  <Alert color="info">
+                    <span>
+                    <span className="font-medium">
+                      Archivo Cargado: 
+                    </span>
+                      {" "+imgFileNameTwo}
+                    </span>
+                  </Alert>
+                )
+              }
+              <br />
           </div>
-          <img className="w-50 h-20" src={imgNameTwo} alt="Logo" />
+          <img className="w-30 h-10" src={imgNameTwo} alt="Logo" />
 
         </Modal.Body>
         <Modal.Footer>

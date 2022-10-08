@@ -7,7 +7,7 @@ import { Navbar, Sidebar, Spinner } from '../lib';
 import { routes } from './routes';
 
 export const Root: FC = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
   const navigate  = useNavigate();

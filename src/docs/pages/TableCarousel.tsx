@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
+import { useState, useEffect/* , useRef */ } from 'react';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea, Alert } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -20,7 +20,7 @@ interface DataCarouselProps {
 }[];
 
 const TableCarousel: FC = () => {
-
+  //const ref = useRef();
   const [loading, setLoading] = useState<boolean | undefined>(true);
   const [dataCarousel, setDataCarousel] = useState<Array<DataCarouselProps>>([]);
   const [openModal, setOpenModal] = useState<boolean | undefined>();
@@ -30,9 +30,9 @@ const TableCarousel: FC = () => {
   const [title, setTitle] = useState<string | undefined>("");
   const [subTitle, setSubTitle] = useState<string | undefined>("");
   const [imgName, setImgName] = useState<string | undefined>("");
-
-  const [imgFile, setImgFile] = useState<File | undefined>();
-  const [pageUsed, setPageUsed] = useState<string | undefined>("");
+  const [imgFile, setImgFile] = useState<File | undefined>(undefined);
+  const [imgFileName, setImgFileName] = useState<string>("");
+  const [pageUsed, setPageUsed] = useState<string | undefined>("Inicio");
 
   const getDataCarousel = async () => {
     const getDataCarousel = await fetch(`${host}carousel`)
@@ -49,7 +49,6 @@ const TableCarousel: FC = () => {
     const getDataIdCarousel = await fetch(`${host}carousel/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
-    //Validar cuando sea false mostrar una modal de errro
 
     if (getDataIdCarousel) {
       setUid(getDataIdCarousel.id);
@@ -62,6 +61,33 @@ const TableCarousel: FC = () => {
   };
 
   const insertDataCarousel = async () => {
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(subTitle?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Subtitulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(pageUsed?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Pagina sin seleccionar",
+        'error'
+      );
+      return;
+    }
 
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
@@ -86,25 +112,62 @@ const TableCarousel: FC = () => {
           .then(data => { return data.data });
           
           cleanData();
-          getDataCarousel();
           setOpenModal(false);
 
           Swal.fire(
-            'Success',
-            'Your Register was add',
+            "Éxito",
+            "Tu registro fue agregado",
             'success'
           );
 
       } else {
-        //Validar cuando el archivo este vacios
+        Swal.fire(
+          "Error",
+          "Error, archivo vacio.",
+          'error'
+        );
       }
 
+    }else{
+      Swal.fire(
+        "Error",
+        "Error, al agregar archivo.",
+        'error'
+      );
     }
 
   };
 
   const updateDataCarousel = async() =>{
     let urlImage;
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(subTitle?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Subtitulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(pageUsed?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Pagina sin seleccionar",
+        'error'
+      );
+      return;
+    }
+
     if(imgFile){
       urlImage = await updateImage(imgFile); 
     }else{
@@ -119,8 +182,6 @@ const TableCarousel: FC = () => {
         "pageUsed": pageUsed
       };
 
-      console.log(dataUpdate)
-
       await fetch(`${host}carousel`,
       {
         method: 'PATCH',
@@ -133,11 +194,11 @@ const TableCarousel: FC = () => {
       .then(data => { return data.data });
 
       cleanData();
-      setLoading(true);
       setOpenModalUpdate(false);
+
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -158,19 +219,21 @@ const TableCarousel: FC = () => {
   }
 
   const cleanData = () => {
+      setLoading(true);
       setUid("");
       setTitle("");
       setSubTitle("");
       setImgName("");
       setImgFile(undefined);
-      setImgName("");
-      setPageUsed("");
+      setPageUsed("Inicio");
+      setImgFileName("");
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name)
   };
 
   useEffect(() => {
@@ -232,7 +295,7 @@ const TableCarousel: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
+                    <Table.Cell colSpan={5}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -241,7 +304,10 @@ const TableCarousel: FC = () => {
         </Table>
       )}
 
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal show={openModal} onClose={() => {
+        cleanData()
+        setOpenModal(false)
+        }}>
         <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
@@ -279,7 +345,7 @@ const TableCarousel: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="page-img"
-                value="Selecionar una imagen"
+                value="Selecionar una página"
               />
             </div>
             <Select
@@ -310,7 +376,20 @@ const TableCarousel: FC = () => {
               id="file"
               helperText="Imagen que se mostrara dentro de la plantilla"
               onChange={handleImageChange}
+              value={""}
             />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }  
           </div>
           
         </Modal.Body>
@@ -322,7 +401,10 @@ const TableCarousel: FC = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
+      <Modal show={openModalUpdate} onClose={() => {
+        cleanData()
+        setOpenModalUpdate(false)
+        }}>
         <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
@@ -398,8 +480,22 @@ const TableCarousel: FC = () => {
               id="file"
               helperText="Seleccione imagen"
               onChange={handleImageChange}
+              value={""}
             />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
           </div>
+          <br />
           <img className="w-80 h-30" src={imgName} alt="Logo" />
         </Modal.Body>
         <Modal.Footer>

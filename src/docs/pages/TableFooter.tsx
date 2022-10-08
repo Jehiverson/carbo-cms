@@ -27,7 +27,7 @@ const TableFooter: FC = () => {
   const [uid, setUid] = useState<string | undefined>("");
   const [title, setTitle] = useState<string | undefined>("");
   const [description, setDescription] = useState<string | undefined>("");
-  const [createdAt, setCreatedAt] = useState<Date | undefined>(new Date());
+  const [createdAt, setCreatedAt] = useState<Date | undefined>();
 
   const getData = async () => {
     const getData = await fetch(`${host}footer`)
@@ -57,12 +57,30 @@ const TableFooter: FC = () => {
 
   const updateData = async() =>{
 
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
+
       let dataUpdate = {
         "id": uid,
         "title": title,
         "description": description,
         "createdAt": createdAt,
-      };
+      }; 
 
       await fetch(`${host}footer`,
       {
@@ -79,8 +97,8 @@ const TableFooter: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -193,7 +211,7 @@ const TableFooter: FC = () => {
                 type="date"
                 value={moment(createdAt).format("YYYY-MM-DD")}
                 required={true}
-                onChange={(e) => setCreatedAt(new Date(moment(e.target.value).format("YYYY-MM-DD hh:mm:ss")))}
+                onChange={(e) => setCreatedAt(new Date(moment(e.target.value).format("YYYY-MM-DD")))}
               />
           </div>
         </Modal.Body>

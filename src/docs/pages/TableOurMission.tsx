@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea, Alert } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -16,6 +16,7 @@ interface DataOurMissionProps {
   subtitle: string;
   imgName: string;
   type: boolean;
+  order: Number;
 }[];
 
 const TableOurMission: FC = () => {
@@ -31,7 +32,9 @@ const TableOurMission: FC = () => {
   const [imgName, setImgName] = useState<string | undefined>("");
 
   const [imgFile, setImgFile] = useState<File | undefined>();
-  const [type, setType] = useState<boolean | undefined | string>(false);
+  const [type, setType] = useState<boolean | undefined | string>(true);
+  const [imgFileName, setImgFileName] = useState<string>("");
+  const [order, setOrder] = useState<number | undefined >(0);
 
   const getDataOurMission = async () => {
     const getDataOurMission = await fetch(`${host}ourmission`)
@@ -45,22 +48,51 @@ const TableOurMission: FC = () => {
   };
 
   const getUpdateDataOurMission = async (id: string) => {
+    setImgFileName("");
     const getDataIdOurMission = await fetch(`${host}ourmission/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
-
+    console.log(getDataIdOurMission);
     if (getDataIdOurMission) {
       setUid(getDataIdOurMission.id);
       setTitle(getDataIdOurMission.title);
       setSubTitle(getDataIdOurMission.subtitle);
       setImgName(getDataIdOurMission.imgName);
       setType(getDataIdOurMission.type);
+      setOrder(getDataIdOurMission.order);
       setOpenModalUpdate(true);
     }
   };
 
   const insertDataOurMission = async () => {
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(subTitle?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de subtitulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(order?.toString().length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de orden vacio",
+        'error'
+      );
+      return;
+    }
 
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
@@ -71,6 +103,7 @@ const TableOurMission: FC = () => {
           "imgName": urlImage,
           "subtitle": subTitle,
           "type": type,
+          "order": order
         };
 
         await fetch(`${host}ourmission`,
@@ -89,20 +122,58 @@ const TableOurMission: FC = () => {
           setOpenModal(false);
 
           Swal.fire(
-            'Success',
-            'Your Register was add',
+            "Éxito",
+            "Tu registro fue agregado",
             'success'
           );
 
       } else {
-        //Validar cuando el archivo este vacios
+        Swal.fire(
+          "Error",
+          "Error, al agregar archivo.",
+          'error'
+        );
       }
 
+    }else{
+      Swal.fire(
+        "Error",
+        "Error, al agregar archivo.",
+        'error'
+      );
     }
 
   };
 
   const updateDataOurMission = async() =>{
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(subTitle?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de subtitulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(order?.toString().length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de orden vacio",
+        'error'
+      );
+      return;
+    }
+
     let urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
@@ -115,10 +186,9 @@ const TableOurMission: FC = () => {
         "title": title,
         "imgName": urlImage,
         "subtitle": subTitle,
-        "type": type
+        "type": type,
+        "order": order
       };
-
-      console.log(dataUpdate)
 
       await fetch(`${host}ourmission`,
       {
@@ -135,8 +205,8 @@ const TableOurMission: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -163,13 +233,16 @@ const TableOurMission: FC = () => {
       setImgName("");
       setImgFile(undefined);
       setImgName("");
-      setType(false);
+      setType(true);
+      setImgFileName("");
+      setOrder(0);
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name);
   };
 
   useEffect(() => {
@@ -205,6 +278,7 @@ const TableOurMission: FC = () => {
             <Table.HeadCell>Subtitulo</Table.HeadCell>
             <Table.HeadCell>Imagen</Table.HeadCell>
             <Table.HeadCell>Voltear</Table.HeadCell>
+            <Table.HeadCell>Orden</Table.HeadCell>
             <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -220,6 +294,7 @@ const TableOurMission: FC = () => {
                       <img className="w-40 h-30" src={elementOurMission.imgName} alt="Logo" />
                     </Table.Cell>
                     <Table.Cell>{elementOurMission.type?"True":"False"}</Table.Cell>
+                    <Table.Cell>{elementOurMission.order.toString()}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
                         <Button onClick={() => getUpdateDataOurMission(elementOurMission.id)}><HiPencil /></Button>
@@ -231,7 +306,7 @@ const TableOurMission: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
+                    <Table.Cell colSpan={5}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -284,15 +359,31 @@ const TableOurMission: FC = () => {
             <Select
               id="page-img"
               required={true}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
+              onChange={(e) => {setType(e.target.value === "true"?true:false)}}
             >
               <option>
-                True
+                true
               </option>
               <option>
-                False
+                false
               </option>
             </Select>
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="orden"
+                value="Orden"
+              />
+            </div>
+            <TextInput
+              id="orden"
+              type="number"
+              value={order}
+              required={true}
+              onChange={(e) => setOrder(Number(e.target.value))}
+            />
           </div>
           
           <div id="fileUpload">
@@ -306,7 +397,21 @@ const TableOurMission: FC = () => {
               id="file"
               helperText="Imagen que se mostrara dentro de la plantilla"
               onChange={handleImageChange}
+              value={""}
             />
+            <br />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
           </div>
           
         </Modal.Body>
@@ -369,15 +474,31 @@ const TableOurMission: FC = () => {
               id="page-img"
               required={true}
               value={type?.toString()}
-              onChange={(e) => {setType(Boolean(e.target.value))}}
+              onChange={(e) => {setType(e.target.value === "true"?true:false)}}
             >
               <option>
-                True
+                true
               </option>
               <option>
-                False
+                false
               </option>
             </Select>
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="orden"
+                value="Orden"
+              />
+            </div>
+            <TextInput
+              id="orden"
+              type="number"
+              value={order}
+              required={true}
+              onChange={(e) => setOrder(Number(e.target.value))}
+            />
           </div>
 
           <div id="fileUpload">
@@ -391,7 +512,22 @@ const TableOurMission: FC = () => {
               id="file"
               helperText="Seleccione imagen"
               onChange={handleImageChange}
+              value={""}
             />
+            <br />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
+            <br />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>

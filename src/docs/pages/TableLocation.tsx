@@ -59,6 +59,42 @@ const TableLocation: FC = () => {
 
   const updateData = async() =>{
     
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(latitud?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Latitud vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(longuitud?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Longuitud vacio",
+        'error'
+      );
+      return;
+    }
+    
       let dataUpdate = {
         "id": uid,
         "description": description,
@@ -85,8 +121,8 @@ const TableLocation: FC = () => {
       setOpenModalUpdate(false);
 
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }

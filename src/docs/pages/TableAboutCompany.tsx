@@ -30,7 +30,7 @@ const TableAboutCompany: FC = () => {
   const [imgFile, setImgFile] = useState<File | undefined>();
 
   const getData = async () => {
-    const getData = await fetch(`${host}aboutus`)
+    const getData = await fetch(`${host}aboutcompany`)
       .then(response => response.json())
       .then(data => { return data.data });
     console.log(getData)
@@ -41,7 +41,7 @@ const TableAboutCompany: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
-    const getDataId = await fetch(`${host}aboutus/${id}`)
+    const getDataId = await fetch(`${host}aboutcompany/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
@@ -70,7 +70,7 @@ const TableAboutCompany: FC = () => {
 
       console.log(dataUpdate)
 
-      await fetch(`${host}aboutus`,
+      await fetch(`${host}aboutcompany`,
       {
         method: 'PATCH',
         headers: {
@@ -85,8 +85,8 @@ const TableAboutCompany: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }

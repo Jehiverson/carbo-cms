@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Select, Textarea, Alert } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -17,6 +17,7 @@ interface DataProductsProps {
   imgName: string;
   mvp: boolean;
   reverse: boolean;
+  order: Number;
 }[];
 
 const TableProducts: FC = () => {
@@ -32,8 +33,10 @@ const TableProducts: FC = () => {
   const [imgName, setImgName] = useState<string | undefined>("");
 
   const [imgFile, setImgFile] = useState<File | undefined>();
-  const [mvp, setMvp] = useState<boolean | undefined | string>(false);
-  const [reverse, setReverse] = useState<boolean | undefined | string>(false);
+  const [mvp, setMvp] = useState<boolean | undefined | string>(true);
+  const [reverse, setReverse] = useState<boolean | undefined | string>(true);
+  const [imgFileName, setImgFileName] = useState<string>("");
+  const [order, setOrder] = useState<number | undefined >(0);
 
   const getData = async () => {
     const getData = await fetch(`${host}products`)
@@ -47,11 +50,12 @@ const TableProducts: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
+    
     const getDataId = await fetch(`${host}products/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
     //Validar cuando sea false mostrar una modal de errro
-
+    console.log(getDataId)
     if (getDataId) {
       setUid(getDataId.id);
       setTitle(getDataId.title);
@@ -59,11 +63,41 @@ const TableProducts: FC = () => {
       setImgName(getDataId.imgName);
       setMvp(getDataId.mvp);
       setReverse(getDataId.reverse);
+      setOrder(getDataId.order);
       setOpenModalUpdate(true);
+      
     }
   };
 
   const insertData = async () => {
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(subTitle?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de subtitulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(order?.toString().length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de orden vacio",
+        'error'
+      );
+      return;
+    }
+
 
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
@@ -74,10 +108,13 @@ const TableProducts: FC = () => {
           "imgName": urlImage,
           "subtitle": subTitle,
           "mvp": mvp,
-          "reverse": reverse
+          "reverse": reverse,
+          "order": order
         };
 
-        await fetch(`${host}products`,
+        console.log(dataInsert)
+
+         await fetch(`${host}products`,
           {
             method: 'POST',
             headers: {
@@ -86,27 +123,67 @@ const TableProducts: FC = () => {
             body: JSON.stringify(dataInsert)
           })
           .then(response => response.json())
-          .then(data => { return data.data });
+          .then(data => { return data.data }); 
           
           cleanData();
           getData();
           setOpenModal(false);
 
           Swal.fire(
-            'Success',
-            'Your Register was add',
+            "Éxito",
+            "Tu registro fue agregado",
             'success'
           );
 
       } else {
-        //Validar cuando el archivo este vacios
+        Swal.fire(
+          "Error",
+          "Error, al agregar archivo.",
+          'error'
+        );
       }
 
+    }else{
+      Swal.fire(
+        "Error",
+        "Error, al agregar archivo.",
+        'error'
+      );
     }
 
   };
 
   const updateData = async() =>{
+
+    console.log(title)
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(subTitle?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de subtitulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(order?.toString().length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de orden vacio",
+        'error'
+      );
+      return;
+    }
+
     let urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
@@ -120,10 +197,9 @@ const TableProducts: FC = () => {
         "imgName": urlImage,
         "subtitle": subTitle,
         "mvp": mvp,
-        "reverse": reverse
+        "reverse": reverse,
+        "order": order
       };
-
-      console.log(dataUpdate)
 
       await fetch(`${host}products`,
       {
@@ -140,11 +216,11 @@ const TableProducts: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
-  }
+  };
 
   const deleteData =async(uid:string) => {
     await fetch(`${host}products`,
@@ -159,7 +235,7 @@ const TableProducts: FC = () => {
       .then(data => { return data.data });
     
       setLoading(true);
-  }
+  };
 
   const cleanData = () => {
       setUid("");
@@ -168,14 +244,16 @@ const TableProducts: FC = () => {
       setImgName("");
       setImgFile(undefined);
       setImgName("");
-      setMvp(false);
-      setReverse(false);
+      setMvp(true);
+      setReverse(true);
+      setImgFileName("");
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name);
   };
 
   useEffect(() => {
@@ -212,6 +290,7 @@ const TableProducts: FC = () => {
             <Table.HeadCell>Imagen</Table.HeadCell>
             <Table.HeadCell>MVP</Table.HeadCell>
             <Table.HeadCell>Volteada</Table.HeadCell>
+            <Table.HeadCell>Orden</Table.HeadCell>
             <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -224,10 +303,11 @@ const TableProducts: FC = () => {
                     <Table.Cell>{elementProducts.title}</Table.Cell>
                     <Table.Cell>{elementProducts.subtitle}</Table.Cell>
                     <Table.Cell>
-                      <img className="w-40 h-30" src={elementProducts.imgName} alt="Logo" />
+                      <img className="w-40 h-25" src={elementProducts.imgName} alt="Logo" />
                     </Table.Cell>
                     <Table.Cell>{elementProducts.mvp?"True":"False"}</Table.Cell>
                     <Table.Cell>{elementProducts.reverse?"True":"False"}</Table.Cell>
+                    <Table.Cell>{elementProducts.order.toString()}</Table.Cell>
                     <Table.Cell>
                       <Button.Group>
                         <Button onClick={() => getUpdateData(elementProducts.id)}><HiPencil /></Button>
@@ -239,7 +319,7 @@ const TableProducts: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
+                    <Table.Cell colSpan={6}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -248,7 +328,10 @@ const TableProducts: FC = () => {
         </Table>
       )}
 
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal show={openModal} onClose={() => {
+        cleanData()
+        setOpenModal(false)
+        }}>
         <Modal.Header>Crear Registro</Modal.Header>
         <Modal.Body>
           <div>
@@ -292,7 +375,7 @@ const TableProducts: FC = () => {
             <Select
               id="page-img"
               required={true}
-              onChange={(e) => {setMvp(Boolean(e.target.value))}}
+              onChange={(e) => {setMvp(e.target.value === "true"?true:false)}}
             >
               <option>
                 True
@@ -313,7 +396,7 @@ const TableProducts: FC = () => {
             <Select
               id="page-img"
               required={true}
-              onChange={(e) => {setReverse(Boolean(e.target.value))}}
+              onChange={(e) => {setReverse(e.target.value === "true"?true:false)}}
             >
               <option>
                 True
@@ -322,6 +405,22 @@ const TableProducts: FC = () => {
                 False
               </option>
             </Select>
+          </div>
+          
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="orden"
+                value="Orden"
+              />
+            </div>
+            <TextInput
+              id="orden"
+              type="number"
+              value={order}
+              required={true}
+              onChange={(e) => setOrder(Number(e.target.value))}
+            />
           </div>
           
           <div id="fileUpload">
@@ -335,19 +434,36 @@ const TableProducts: FC = () => {
               id="file"
               helperText="Imagen que se mostrara dentro de la plantilla"
               onChange={handleImageChange}
+              value={""}
             />
+            <br />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
           </div>
           
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => insertData()}>Guardar</Button>
+          <Button onClick={() => insertData()}> Guardar </Button>
           <Button color="gray" onClick={() => setOpenModal(false)}>
             Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
 
-      <Modal show={openModalUpdate} onClose={() => setOpenModalUpdate(false)}>
+      <Modal show={openModalUpdate} onClose={() => {
+          cleanData()
+          setOpenModalUpdate(false)
+        }}>
         <Modal.Header>Actualizar Registro</Modal.Header>
         <Modal.Body>
           <div>
@@ -398,7 +514,7 @@ const TableProducts: FC = () => {
               id="page-img"
               required={true}
               value={mvp?.toString()}
-              onChange={(e) => {setMvp(Boolean(e.target.value))}}
+              onChange={(e) => {setMvp(e.target.value === "true"?true:false)}}
             >
               <option>
                 true
@@ -420,7 +536,7 @@ const TableProducts: FC = () => {
               id="page-img"
               required={true}
               value={reverse?.toString()}
-              onChange={(e) => {setReverse(Boolean(e.target.value))}}
+              onChange={(e) => {setReverse(e.target.value === "true"?true:false)}}
             >
               <option>
                 true
@@ -429,6 +545,22 @@ const TableProducts: FC = () => {
                 false
               </option>
             </Select>
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="orden"
+                value="Orden"
+              />
+            </div>
+            <TextInput
+              id="orden"
+              type="number"
+              value={order}
+              required={true}
+              onChange={(e) => setOrder(Number(e.target.value))}
+            />
           </div>
 
           <div id="fileUpload">
@@ -442,7 +574,21 @@ const TableProducts: FC = () => {
               id="file"
               helperText="Seleccione imagen"
               onChange={handleImageChange}
+              value={""}
             />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                    <span className="font-medium">
+                      Archivo Cargado: 
+                    </span>
+                    {" " + imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
+            <br />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>

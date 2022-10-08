@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, Select, FileInput, Textarea } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, Select, FileInput, Textarea, Alert } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -28,16 +28,17 @@ const TableOurServices: FC = () => {
   const [uid, setUid] = useState<string | undefined>("");
   const [title, setTitle] = useState<string | undefined>("");
   const [description, setDescription] = useState<string | undefined>("");
-  const [type, setType] = useState<undefined | string>("");
+  const [type, setType] = useState<undefined | string>("Nuestros Servicios");
 
   const [imgName, setImgName] = useState<string | undefined>("");
   const [imgFile, setImgFile] = useState<File | undefined>();
+  const [imgFileName, setImgFileName] = useState<string>("");
 
   const getDataOurServices = async () => {
     const getDataOurServices = await fetch(`${host}ourservices`)
       .then(response => response.json())
       .then(data => { return data.data });
-    console.log(getDataOurServices)
+    console.log(getDataOurServices) 
     if (dataOurServices) {
       setLoading(false);
       setDataOurServices(getDataOurServices);
@@ -45,6 +46,7 @@ const TableOurServices: FC = () => {
   };
 
   const getUpdateDataOurServices = async (id: string) => {
+    setImgFileName("");
     const getDataIdOurServices = await fetch(`${host}ourservices/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
@@ -62,16 +64,36 @@ const TableOurServices: FC = () => {
 
   const insertDataOurServices = async () => {
 
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
+
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
       if (urlImage) {
+
         let dataInsert = {
           "title": title,
           "description": description,
-          "type": type,
+          "imgName":urlImage,
+          "type": type
         };
 
-
+        console.log(dataInsert)
         await fetch(`${host}ourservices`,
           {
             method: 'POST',
@@ -88,18 +110,47 @@ const TableOurServices: FC = () => {
           setOpenModal(false);
 
           Swal.fire(
-            'Success',
-            'Your Register was add',
+            "Éxito",
+            "Tu registro fue agregado",
             'success'
           );
         } else {
-          //Validar cuando el archivo este vacios
+          Swal.fire(
+            "Error",
+            "Error, archivo vacio.",
+            'error'
+          );
         }
   
-        }
+      }else{
+        Swal.fire(
+          "Error",
+          "Error, al agregar archivo.",
+          'error'
+        );
+      }
   };
 
   const updateDataOurServices = async() =>{
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
+
     var urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
@@ -131,8 +182,8 @@ const TableOurServices: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -156,15 +207,17 @@ const TableOurServices: FC = () => {
       setUid("");
       setTitle("");
       setDescription("");
-      setType("");
+      setType("Nuestros Servicios");
       setImgName("");
       setImgFile(undefined);
+      setImgFileName("");
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name);
   };
 
   useEffect(() => {
@@ -227,7 +280,7 @@ const TableOurServices: FC = () => {
               }):
               (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell colSpan={4}> No se encontro información </Table.Cell>
+                    <Table.Cell colSpan={5}> No se encontro información </Table.Cell>
                   </Table.Row>
               )
             }
@@ -281,12 +334,16 @@ const TableOurServices: FC = () => {
               id="page-img"
               required={true}
               onChange={(e) => {setType(e.target.value)}}
+              value={type}
             >
               <option>
                 Nuestros Servicios
               </option>
               <option>
                 Nuestras Especializaciones
+              </option>
+              <option>
+                Formas De Pago
               </option>
             </Select>
           </div>  
@@ -301,7 +358,20 @@ const TableOurServices: FC = () => {
               id="file"
               helperText="Imagen que se mostrara dentro de la plantilla"
               onChange={handleImageChange}
+              value={""}
             />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -371,6 +441,9 @@ const TableOurServices: FC = () => {
               <option>
                 Nuestras Especializaciones
               </option>
+              <option>
+                Formas De Pago
+              </option>
             </Select>
           </div>
           <div id="fileUpload">
@@ -384,7 +457,21 @@ const TableOurServices: FC = () => {
               id="file"
               helperText="Seleccione imagen"
               onChange={handleImageChange}
+              value={""}
             />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
+            <br />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>

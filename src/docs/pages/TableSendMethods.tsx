@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Textarea } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, FileInput, Textarea, Alert } from '../../lib';
 import {
   HiPencil,
   HiPlus,
@@ -30,6 +30,7 @@ const TableSendMethods: FC = () => {
   const [description, setDescription] = useState<string | undefined>("");
   const [imgName, setImgName] = useState<string | undefined>("");
   const [imgFile, setImgFile] = useState<File | undefined>();
+  const [imgFileName, setImgFileName] = useState<string>("");
   
   const getData = async () => {
     const getData = await fetch(`${host}sendmethods`)
@@ -43,6 +44,7 @@ const TableSendMethods: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
+    setImgFileName("");
     const getDataId = await fetch(`${host}sendmethods/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
@@ -59,6 +61,25 @@ const TableSendMethods: FC = () => {
 
   const insertData = async () => {
 
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",  
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
+
+    
     if (imgFile) {
       var urlImage = await updateImage(imgFile);
       if (urlImage) {
@@ -85,20 +106,49 @@ const TableSendMethods: FC = () => {
           setOpenModal(false);
 
           Swal.fire(
-            'Success',
-            'Your Register was add',
+            "Éxito",
+            "Tu registro fue agregado",
             'success'
           );
 
       } else {
-        //Validar cuando el archivo este vacios
+        Swal.fire(
+          "Error",
+          "Error, archivo vacio.",
+          'error'
+        );
       }
 
+    }else{
+      Swal.fire(
+        "Error",
+        "Error, al agregar archivo.",
+        'error'
+      );
     }
 
   };
 
   const updateData = async() =>{
+
+    if(title?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de titulo vacio",
+        'error'
+      );
+      return;
+    }
+
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de descripción vacio",
+        'error'
+      );
+      return;
+    }
+    
     let urlImage;
     if(imgFile){
       urlImage = await updateImage(imgFile); 
@@ -130,8 +180,8 @@ const TableSendMethods: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -158,12 +208,14 @@ const TableSendMethods: FC = () => {
       setImgName("");
       setImgFile(undefined);
       setImgName("");
+      setImgFileName("");
   };
 
   const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
     if (!fileList) return;
     setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name)
   };
 
   useEffect(() => {
@@ -174,7 +226,7 @@ const TableSendMethods: FC = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="flex-1 min-w-0">
-          <label style={{ color: 'white', fontSize: '30px' }}>Metodos De Pago</label>
+          <label style={{ color: 'white', fontSize: '30px' }}>Metodos De Envio</label>
         </div>
         <div className="mt-5 flex lg:mt-0 lg:ml-4">
           <Button onClick={() => {
@@ -277,7 +329,21 @@ const TableSendMethods: FC = () => {
               id="file"
               helperText="Imagen que se mostrara dentro de la plantilla"
               onChange={handleImageChange}
-            />
+              value={""}
+              />
+              <br />
+              {
+                imgFileName?.length > 0 && (
+                  <Alert color="info">
+                    <span>
+                    <span className="font-medium">
+                      Archivo Cargado: 
+                    </span>
+                      {" "+imgFileName}
+                    </span>
+                  </Alert>
+                )
+              }
           </div>
           
         </Modal.Body>
@@ -340,7 +406,21 @@ const TableSendMethods: FC = () => {
               id="file"
               helperText="Seleccione imagen"
               onChange={handleImageChange}
-            />
+              value={""}
+              />
+              {
+                imgFileName?.length > 0 && (
+                  <Alert color="info">
+                    <span>
+                    <span className="font-medium">
+                      Archivo Cargado: 
+                    </span>
+                      {" "+imgFileName}
+                    </span>
+                  </Alert>
+                )
+              }
+              <br />
           </div>
           <img className="w-50 h-20" src={imgName} alt="Logo" />
         </Modal.Body>

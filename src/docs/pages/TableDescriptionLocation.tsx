@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
-import { Modal, Table, Button, Spinner, Label, TextInput, Textarea  } from '../../lib';
+import { Modal, Table, Button, Spinner, Label, TextInput, Textarea, Alert, FileInput  } from '../../lib';
 import {
   HiPencil,/* 
   HiPlus,
@@ -9,7 +9,7 @@ import {
 import Swal from 'sweetalert2'
 
 import { host } from "../../constants/defaultSetting";
-
+import { updateImage } from "../functions/generalFunctions";
 interface DataDescriptionLocationProps {
   id: string;
   frase:string;
@@ -28,6 +28,10 @@ const TableDescriptionLocation: FC = () => {
   const [description, setDescription] = useState<string | undefined>("");
   const [frase, setFrase] = useState<string | undefined>("");
 
+  const [imgName, setImgName] = useState<string | undefined>("");
+  const [imgFile, setImgFile] = useState<File | undefined>();
+  const [imgFileName, setImgFileName] = useState<string>("");
+
   const getData = async () => {
     const getData = await fetch(`${host}locationdescription`)
       .then(response => response.json())
@@ -40,6 +44,7 @@ const TableDescriptionLocation: FC = () => {
   };
 
   const getUpdateData = async (id: string) => {
+    setImgFileName("");
     const getDataId = await fetch(`${host}locationdescription/${id}`)
       .then(response => response.json())
       .then(data => { return data.data });
@@ -49,19 +54,44 @@ const TableDescriptionLocation: FC = () => {
       setUid(getDataId.id);
       setDescription(getDataId.description);
       setFrase(getDataId.frase);
+      setImgName(getDataId.imgName);
       setOpenModalUpdate(true);
     }
   };
 
   const updateData = async() =>{
     
+      var urlImage;
+      if(imgFile){
+        urlImage = await updateImage(imgFile); 
+      }else{
+        urlImage = imgName;
+      }
+
+      if(description?.length === 0){
+        Swal.fire(
+          "Error",
+          "Campo de descripción vacio",
+          'error'
+        );
+        return;
+      }
+
+      if(frase?.length === 0){
+        Swal.fire(
+          "Error",
+          "Campo de frase vacio",
+          'error'
+        );
+        return;
+      }
+    
       let dataUpdate = {
         "id": uid,
         "description": description,
-        "frase":frase
+        "frase":frase,
+        "imgName": urlImage
       };
-
-      console.log(dataUpdate)
 
       await fetch(`${host}locationdescription`,
       {
@@ -78,8 +108,8 @@ const TableDescriptionLocation: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
@@ -88,6 +118,15 @@ const TableDescriptionLocation: FC = () => {
       setUid("");
       setDescription("");
       setFrase("");
+      setImgFile(undefined);
+      setImgFileName("");
+  };
+
+  const handleImageChange = function (e: React.ChangeEvent<HTMLInputElement>) {
+    const fileList = e.target.files;
+    if (!fileList) return;
+    setImgFile(fileList[0]);
+    setImgFileName(fileList[0].name)
   };
 
   useEffect(() => {
@@ -109,7 +148,8 @@ const TableDescriptionLocation: FC = () => {
       ) : (
         <Table>
           <Table.Head>
-          <Table.HeadCell>Frase</Table.HeadCell>
+            <Table.HeadCell>Imagen</Table.HeadCell>
+            <Table.HeadCell>Frase</Table.HeadCell>
             <Table.HeadCell>Descripción</Table.HeadCell>
             <Table.HeadCell>Opciones</Table.HeadCell>
           </Table.Head>
@@ -120,6 +160,9 @@ const TableDescriptionLocation: FC = () => {
               dataDescriptionLocation.map((elementDescriptionLocation, idElement) => {
                 return (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={idElement}>
+                    <Table.Cell>
+                      <img className="w-40 h-25" src={elementDescriptionLocation.imgName} alt="Logo" />
+                    </Table.Cell>
                     <Table.Cell>{elementDescriptionLocation.frase}</Table.Cell>
                     <Table.Cell>{elementDescriptionLocation.description}</Table.Cell>
                     <Table.Cell>
@@ -155,29 +198,56 @@ const TableDescriptionLocation: FC = () => {
             <div className="mb-2 block">
               <Label
                 htmlFor="title"
-                value="Descripción"
+                value="Frase"
               />
             </div>
             <TextInput
               id="title"
               type="text"
-              value={description}
+              value={frase}
               required={true}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setFrase(e.target.value)}
             />
             <div className="mb-2 block">
               <Label
                 htmlFor="frase"
-                value="Frase"
+                value="Descripción"
               />
             </div>
             <Textarea
               id="frase"
               rows={7}
-              value={frase}
+              value={description}
               required={true}
-              onChange={(e) => setFrase(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
             />
+            <div id="fileUpload">
+            <div className="mb-2 block">
+              <Label
+                htmlFor="file"
+                value="Imagen"
+              />
+            </div>
+            <FileInput
+              id="file"
+              helperText="Imagen que se mostrara dentro de la plantilla"
+              onChange={handleImageChange}
+              value={""}
+            />
+            <br />
+            {
+              imgFileName?.length > 0 && (
+                <Alert color="info">
+                  <span>
+                  <span className="font-medium">
+                    Archivo Cargado: 
+                  </span>
+                    {" "+imgFileName}
+                  </span>
+                </Alert>
+              )
+            }
+          </div>
           </div>
         </Modal.Body>
         <Modal.Footer>

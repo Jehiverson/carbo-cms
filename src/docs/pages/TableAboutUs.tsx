@@ -52,6 +52,15 @@ const TableAboutUs: FC = () => {
 
   const updateData = async() =>{
     
+    if(description?.length === 0){
+      Swal.fire(
+        "Error",
+        "Campo de Descripción vacio",
+        'error'
+      );
+      return;
+    }
+
       let dataUpdate = {
         "id": uid,
         "description": description
@@ -74,8 +83,8 @@ const TableAboutUs: FC = () => {
       setLoading(true);
       setOpenModalUpdate(false);
       Swal.fire(
-        'Success',
-        'Your Register was update',
+        "Éxito",
+        'Tu registro fue actualizado',
         'success'
       );
   }
