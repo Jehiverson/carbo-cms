@@ -351,6 +351,7 @@ const TableCarousel: FC = () => {
             <Select
               id="page-img"
               required={true}
+              value={pageUsed?.toString()}
               onChange={(e) => {setPageUsed(e.target.value)}}
             >
               <option>

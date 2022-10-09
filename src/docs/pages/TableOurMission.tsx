@@ -359,6 +359,7 @@ const TableOurMission: FC = () => {
             <Select
               id="page-img"
               required={true}
+              value={type?.toString()}
               onChange={(e) => {setType(e.target.value === "true"?true:false)}}
             >
               <option>

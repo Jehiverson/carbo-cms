@@ -375,6 +375,7 @@ const TableProducts: FC = () => {
             <Select
               id="page-img"
               required={true}
+              value={mvp?.toString()}
               onChange={(e) => {setMvp(e.target.value === "true"?true:false)}}
             >
               <option>
@@ -397,6 +398,7 @@ const TableProducts: FC = () => {
               id="page-img"
               required={true}
               onChange={(e) => {setReverse(e.target.value === "true"?true:false)}}
+              value={reverse?.toString()}
             >
               <option>
                 True
